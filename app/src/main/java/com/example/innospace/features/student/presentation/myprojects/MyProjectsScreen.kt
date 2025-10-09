@@ -110,7 +110,7 @@ class MyProjectsViewModel @Inject constructor(
             try {
                 _projects.value = repository.getProjectsByStudentId(studentId)
             } catch (e: Exception) {
-                // Manejar error
+
             } finally {
                 _isLoading.value = false
             }

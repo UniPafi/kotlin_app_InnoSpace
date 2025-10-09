@@ -37,7 +37,7 @@ fun ApplicationsScreen(viewModel: ApplicationsViewModel = hiltViewModel()) {
 
 @HiltViewModel
 class ApplicationsViewModel @Inject constructor() : ViewModel() {
-    // Implementación para la lógica de postulaciones
+
 }
 
 @Composable

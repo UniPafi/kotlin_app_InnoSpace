@@ -55,7 +55,7 @@ fun ProfileScreen(
     }
 
     LaunchedEffect(key1 = userId) {
-        viewModel.loadNewUserProfile(userId, name) // Se quita el email de aquí
+        viewModel.loadNewUserProfile(userId, name)
     }
 
     Scaffold(

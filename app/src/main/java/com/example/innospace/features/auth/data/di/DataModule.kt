@@ -21,13 +21,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
-    // --- INICIO DE LA CORRECCIÓN ---
+
     @Provides
     @Singleton
     fun provideSessionManager(@ApplicationContext context: Context): SessionManager {
         return SessionManager(context)
     }
-    // --- FIN DE LA CORRECCIÓN ---
+
 
     @Provides
     @Singleton

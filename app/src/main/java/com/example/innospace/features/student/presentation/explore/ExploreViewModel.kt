@@ -29,8 +29,7 @@ class ExploreViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                // Para propósitos de demo, crearemos algunas oportunidades de ejemplo
-                // En implementación real, obtendrías del repositorio
+
                 val mockOpportunities = listOf(
                     Opportunity(
                         id = 1,
@@ -51,7 +50,7 @@ class ExploreViewModel @Inject constructor(
                 )
                 _opportunities.value = mockOpportunities
             } catch (e: Exception) {
-                // Manejar error
+
             } finally {
                 _isLoading.value = false
             }

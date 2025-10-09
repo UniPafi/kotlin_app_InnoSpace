@@ -1,7 +1,9 @@
 package com.example.innospace.features.auth.presentation.login
 
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -44,7 +47,6 @@ import com.example.innospace.features.student.domain.repositories.StudentReposit
 import com.example.innospace.shared.models.Opportunity
 import com.example.innospace.shared.models.Project
 import com.example.innospace.shared.models.StudentProfile
-
 @Composable
 fun Login(
     viewModel: LoginViewModel = hiltViewModel(),
@@ -57,106 +59,112 @@ fun Login(
 
     val isPasswordVisible = remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "InnoSpace",
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.primary
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .background(Color(0xFF6A1B9A))
+                .align(Alignment.TopCenter)
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
 
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(24.dp)) {
-                Text(
-                    text = "Iniciar Sesión",
-                    style = MaterialTheme.typography.headlineSmall
-                )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "InnoSpace",
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-                OutlinedTextField(
-                    value = emailState.value,
-                    onValueChange = { viewModel.updateEmail(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Email") },
-                    leadingIcon = {
-                        Icon(Icons.Default.Email, contentDescription = null)
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    singleLine = true
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = passwordState.value,
-                    onValueChange = { viewModel.updatePassword(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Contraseña") },
-                    leadingIcon = {
-                        Icon(Icons.Default.Lock, contentDescription = null)
-                    },
-                    visualTransformation = if (isPasswordVisible.value) {
-                        VisualTransformation.None
-                    } else {
-                        PasswordVisualTransformation()
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            isPasswordVisible.value = !isPasswordVisible.value
-                        }) {
-                            Icon(
-                                imageVector = if (isPasswordVisible.value) {
-                                    Icons.Default.Visibility
-                                } else {
-                                    Icons.Default.VisibilityOff
-                                },
-                                contentDescription = null
-                            )
-                        }
-                    },
-                    singleLine = true
-                )
-
-                errorMessage.value?.let { message ->
-                    Spacer(modifier = Modifier.height(8.dp))
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(24.dp)) {
                     Text(
-                        text = message,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodySmall
+                        text = "Iniciar Sesión",
+                        style = MaterialTheme.typography.headlineSmall
                     )
-                }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Button(
-                    onClick = { viewModel.login() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    enabled = !isLoading.value
-                ) {
-                    if (isLoading.value) {
-                        CircularProgressIndicator()
-                    } else {
-                        Text("Iniciar Sesión")
+                    OutlinedTextField(
+                        value = emailState.value,
+                        onValueChange = { viewModel.updateEmail(it) },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("Email") },
+                        leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        singleLine = true
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = passwordState.value,
+                        onValueChange = { viewModel.updatePassword(it) },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("Contraseña") },
+                        leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                        visualTransformation = if (isPasswordVisible.value)
+                            VisualTransformation.None
+                        else
+                            PasswordVisualTransformation(),
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                isPasswordVisible.value = !isPasswordVisible.value
+                            }) {
+                                Icon(
+                                    imageVector = if (isPasswordVisible.value)
+                                        Icons.Default.Visibility
+                                    else
+                                        Icons.Default.VisibilityOff,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        singleLine = true
+                    )
+
+                    errorMessage.value?.let { message ->
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = message,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
-                }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                TextButton(
-                    onClick = onNavigateToRegister,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("¿No tienes cuenta? Regístrate")
+                    Button(
+                        onClick = { viewModel.login() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        enabled = !isLoading.value
+                    ) {
+                        if (isLoading.value) {
+                            CircularProgressIndicator()
+                        } else {
+                            Text("Iniciar Sesión")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    TextButton(
+                        onClick = onNavigateToRegister,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("¿No tienes cuenta? Regístrate")
+                    }
                 }
             }
         }

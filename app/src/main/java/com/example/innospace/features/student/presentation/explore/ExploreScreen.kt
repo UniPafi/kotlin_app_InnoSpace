@@ -84,7 +84,7 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel()) {
                     items(opportunities.value) { opportunity ->
                         OpportunityCard(
                             opportunity = opportunity,
-                            onClick = { /* Handle opportunity click */ }
+                            onClick = {  }
                         )
                     }
                 }

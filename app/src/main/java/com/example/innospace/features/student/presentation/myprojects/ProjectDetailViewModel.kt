@@ -27,7 +27,7 @@ class ProjectDetailViewModel @Inject constructor(
             try {
                 _project.value = studentRepository.getProjectById(projectId)
             } catch (e: Exception) {
-                // Handle error
+
             } finally {
                 _isLoading.value = false
             }

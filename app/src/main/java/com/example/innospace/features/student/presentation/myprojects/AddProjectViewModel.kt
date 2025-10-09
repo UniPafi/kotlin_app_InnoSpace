@@ -41,7 +41,7 @@ class AddProjectViewModel @Inject constructor(
                 studentRepository.createProject(studentId, _title.value, _description.value)
                 _isSuccess.value = true
             } catch (e: Exception) {
-                // Handle error
+
             } finally {
                 _isLoading.value = false
             }

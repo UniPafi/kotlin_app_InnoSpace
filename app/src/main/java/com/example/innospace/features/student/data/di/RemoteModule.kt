@@ -26,6 +26,5 @@ object RemoteModule {
         return retrofit.create(StudentService::class.java)
     }
 
-    // ELIMINA la función provideRetrofit() de este módulo
-    // Ya está proporcionada por DataModule.kt
+
 }
