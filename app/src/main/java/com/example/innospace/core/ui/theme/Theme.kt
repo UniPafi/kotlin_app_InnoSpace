@@ -1,6 +1,5 @@
-package com.example.innospace.ui.theme
+package com.example.innospace.core.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -12,13 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
+    primary = PurplePrimary,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+    primary = PurplePrimary,
     secondary = PurpleGrey40,
     tertiary = Pink40
 
@@ -37,7 +36,7 @@ private val LightColorScheme = lightColorScheme(
 fun InnoSpaceTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false, // <--- Change this to false
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
