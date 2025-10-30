@@ -1,52 +1,65 @@
 package com.example.innospace.features.auth.data.repositories
 
+import com.example.innospace.core.networking.SessionManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import com.example.innospace.features.auth.data.models.LoginRequestDto
-import com.example.innospace.features.auth.data.models.RegisterRequestDto
+import com.example.innospace.features.auth.data.remote.models.LoginRequestDto
+import com.example.innospace.features.auth.data.remote.models.RegisterRequestDto
 import com.example.innospace.features.auth.data.remote.AuthService
 import com.example.innospace.features.auth.domain.models.User
 import com.example.innospace.features.auth.domain.repositories.AuthRepository
+import javax.inject.Inject
 
-class AuthRepositoryImpl(private val service: AuthService) : AuthRepository {
+class AuthRepositoryImpl @Inject constructor(
+    private val service: AuthService,
+    private val sessionManager: SessionManager
+) : AuthRepository {
 
-    override suspend fun login(email: String, password: String): User? =
-        withContext(Dispatchers.IO) {
-            try {
-                val response = service.login(LoginRequestDto(email, password))
-                if (response.isSuccessful) {
-                    response.body()?.let { loginResponseDto ->
-                        return@withContext User(
-                            id = loginResponseDto.id,
-                            email = loginResponseDto.email,
-                            token = loginResponseDto.token
-                        )
+    override suspend fun login(email: String, password: String): User? = withContext(Dispatchers.IO) {
+        try {
+            val response = service.login(com.example.innospace.features.auth.data.remote.models.LoginRequestDto(email, password))
+            if (response.isSuccessful) {
+                response.body()?.let { dto ->
+
+                    dto.token?.let { token ->
+                        sessionManager.saveAuthToken(token)
                     }
+
+                    return@withContext User(
+                        id = dto.id,
+                        email = dto.email,
+                        token = dto.token
+                    )
                 }
-                return@withContext null
-            } catch (e: Exception) {
-                e.printStackTrace()
-                return@withContext null
             }
+            null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
+    }
 
     override suspend fun register(name: String, email: String, password: String, accountType: String): User? =
         withContext(Dispatchers.IO) {
             try {
-                val response = service.register(RegisterRequestDto(name, email, password, accountType))
+                val response = service.register(
+                    com.example.innospace.features.auth.data.remote.models.RegisterRequestDto(
+                        name, email, password, accountType
+                    )
+                )
                 if (response.isSuccessful) {
-                    response.body()?.let { userResource ->
+                    response.body()?.let { dto ->
                         return@withContext User(
-                            id = userResource.id,
-                            email = userResource.email,
-                            accountType = userResource.accountType
+                            id = dto.id,
+                            email = dto.email,
+                            accountType = dto.accountType
                         )
                     }
                 }
-                return@withContext null
+                null
             } catch (e: Exception) {
                 e.printStackTrace()
-                return@withContext null
+                null
             }
         }
 }

@@ -26,228 +26,63 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
+
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.innospace.core.ui.theme.InnoSpaceTheme
 import com.example.innospace.features.auth.domain.models.User
-import com.example.innospace.features.auth.domain.repositories.AuthRepository
-import com.example.innospace.features.student.domain.repositories.StudentRepository
-import com.example.innospace.shared.models.Opportunity
-import com.example.innospace.shared.models.Project
-import com.example.innospace.shared.models.StudentProfile
+
 
 @Composable
 fun Register(
     viewModel: RegisterViewModel = hiltViewModel(),
+    onRegisterSuccess: (User) -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
-    val nameState = viewModel.name.collectAsState()
-    val emailState = viewModel.email.collectAsState()
-    val passwordState = viewModel.password.collectAsState()
-    val accountTypeState = viewModel.accountType.collectAsState()
-    val isLoading = viewModel.isLoading.collectAsState()
-    val errorMessage = viewModel.errorMessage.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-    val isPasswordVisible = remember { mutableStateOf(false) }
+    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var accountType by remember { mutableStateOf("student") }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center
+    ) {
+        TextField(value = name, onValueChange = { name = it }, label = { Text("Name") })
+        TextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
+        TextField(value = password, onValueChange = { password = it }, label = { Text("Password") })
+        TextField(value = accountType, onValueChange = { accountType = it }, label = { Text("Account Type") })
 
-        // Rectángulo morado en la parte superior (igual que en Login)
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(40.dp)
-                .background(Color(0xFF6A1B9A))
-                .align(Alignment.TopCenter)
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Button(
+            onClick = { viewModel.register(name, email, password, accountType) },
+            modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text(
-                text = "InnoSpace",
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.primary
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(24.dp)) {
-                    Text(
-                        text = "Crear Cuenta",
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedTextField(
-                        value = nameState.value,
-                        onValueChange = { viewModel.updateName(it) },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Nombre completo") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Person, contentDescription = null)
-                        },
-                        singleLine = true
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedTextField(
-                        value = emailState.value,
-                        onValueChange = { viewModel.updateEmail(it) },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Email") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Email, contentDescription = null)
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                        singleLine = true
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedTextField(
-                        value = passwordState.value,
-                        onValueChange = { viewModel.updatePassword(it) },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Contraseña") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Lock, contentDescription = null)
-                        },
-                        visualTransformation = if (isPasswordVisible.value) {
-                            VisualTransformation.None
-                        } else {
-                            PasswordVisualTransformation()
-                        },
-                        trailingIcon = {
-                            IconButton(onClick = {
-                                isPasswordVisible.value = !isPasswordVisible.value
-                            }) {
-                                Icon(
-                                    imageVector = if (isPasswordVisible.value) {
-                                        Icons.Default.Visibility
-                                    } else {
-                                        Icons.Default.VisibilityOff
-                                    },
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        singleLine = true
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedTextField(
-                        value = accountTypeState.value,
-                        onValueChange = { viewModel.updateAccountType(it) },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Tipo de cuenta (Estudiante/Gerente)") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Business, contentDescription = null)
-                        },
-                        singleLine = true
-                    )
-
-                    errorMessage.value?.let { message ->
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = message,
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Button(
-                        onClick = { viewModel.register() },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        enabled = !isLoading.value
-                    ) {
-                        if (isLoading.value) {
-                            CircularProgressIndicator()
-                        } else {
-                            Text("Registrarse")
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    TextButton(
-                        onClick = onNavigateToLogin,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("¿Ya tienes cuenta? Inicia Sesión")
-                    }
-                }
-            }
+            Text("Register")
         }
-    }
-}
 
-@Composable
-fun PreviewRegisterViewModel(): RegisterViewModel {
-    return remember {
-        val mockAuthRepository = object : AuthRepository {
-            override suspend fun login(email: String, password: String): User? = null
-            override suspend fun register(
-                name: String,
-                email: String,
-                password: String,
-                accountType: String
-            ): User? = null
+        when {
+            uiState.isLoading -> Text("Registering...")
+            uiState.user != null -> onRegisterSuccess(uiState.user!!)
+            uiState.error != null -> Text("Error: ${uiState.error}")
         }
-        val mockStudentRepository = object : StudentRepository {
-            override suspend fun getOpportunityById(id: Long): Opportunity? = null
-            override suspend fun getProjectsByStudentId(studentId: Long): List<Project> =
-                emptyList()
 
-            override suspend fun getStudentProfileById(profileId: Long): StudentProfile? = null
-            override suspend fun createStudentProfile(userId: Long, name: String): StudentProfile? =
-                null
+        Spacer(modifier = Modifier.height(16.dp))
 
-            override suspend fun createProject(
-                studentId: Long,
-                title: String,
-                description: String
-            ): Project? = null
-
-            override suspend fun getProjectById(id: Long): Project? = null
+        TextButton(onClick = onNavigateToLogin) {
+            Text("¿Ya tienes cuenta? Inicia sesión aquí")
         }
-        RegisterViewModel(
-            authRepository = mockAuthRepository,
-            studentRepository = mockStudentRepository
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegisterPreview() {
-    InnoSpaceTheme {
-        Register(
-            viewModel = PreviewRegisterViewModel(),
-            onNavigateToLogin = {}
-        )
     }
 }
