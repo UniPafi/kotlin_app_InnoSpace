@@ -1,5 +1,6 @@
 package com.example.innospace.features.auth.data.repositories
 
+import com.example.innospace.core.networking.SessionManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.innospace.features.auth.data.remote.models.LoginRequestDto
@@ -10,7 +11,8 @@ import com.example.innospace.features.auth.domain.repositories.AuthRepository
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val service: AuthService
+    private val service: AuthService,
+    private val sessionManager: SessionManager
 ) : AuthRepository {
 
     override suspend fun login(email: String, password: String): User? = withContext(Dispatchers.IO) {
@@ -18,6 +20,11 @@ class AuthRepositoryImpl @Inject constructor(
             val response = service.login(com.example.innospace.features.auth.data.remote.models.LoginRequestDto(email, password))
             if (response.isSuccessful) {
                 response.body()?.let { dto ->
+
+                    dto.token?.let { token ->
+                        sessionManager.saveAuthToken(token)
+                    }
+
                     return@withContext User(
                         id = dto.id,
                         email = dto.email,
