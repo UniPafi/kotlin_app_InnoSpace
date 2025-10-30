@@ -1,4 +1,4 @@
-package com.example.innospace.features.auth.data.di
+package com.example.innospace.features.auth.di
 
 import android.content.Context
 import com.example.innospace.core.networking.ApiConstants
@@ -29,11 +29,7 @@ object DataModule {
     }
 
 
-    @Provides
-    @Singleton
-    fun provideAuthRepository(service: AuthService): AuthRepository {
-        return AuthRepositoryImpl(service)
-    }
+
 
     @Provides
     @Singleton
@@ -41,21 +37,7 @@ object DataModule {
         return retrofit.create(AuthService::class.java)
     }
 
-    @Provides
-    @Singleton
-    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(authInterceptor)
-            .build()
-    }
 
-    @Provides
-    @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(ApiConstants.BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
+
+
 }

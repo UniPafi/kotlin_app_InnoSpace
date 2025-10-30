@@ -1,4 +1,4 @@
-package com.example.innospace.features.auth.data.models
+package com.example.innospace.features.auth.data.remote.models
 
 data class LoginResponseDto(
     val id: Long,
