@@ -1,7 +1,11 @@
 package com.example.innospace.core.root
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Assignment
+import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Person
@@ -14,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,7 +43,10 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
     val selectedIndex = remember { mutableIntStateOf(0) }
 
     val navigationItems = listOf(
-        NavigationItem(Icons.Default.Explore, "Explorar", Route.Explore.route)
+        NavigationItem(Icons.Default.Explore, "Explorar", Route.Explore.route),
+        NavigationItem(Icons.Default.Work, "Mis Proyectos", Route.MyProjects.route),
+        NavigationItem(Icons.Default.Assignment, "Mis Postulaciones", Route.Applications.route),
+        NavigationItem(Icons.Default.Person, "Perfil", Route.Profile.route)
     )
 
     Scaffold(
@@ -63,7 +71,7 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
                 }
             }
         }
-    ) { paddingValues ->
+    ) {  paddingValues ->
         NavHost(
             navController = navController,
             startDestination = Route.Explore.route,
@@ -71,6 +79,33 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
         ) {
             composable(Route.Explore.route) {
                 ExploreScreen(viewModel = hiltViewModel())
+            }
+
+            composable(Route.MyProjects.route) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Sección Mis Proyectos (en desarrollo)")
+                }
+            }
+
+            composable(Route.Applications.route) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Sección Mis Postulaciones (en desarrollo)")
+                }
+            }
+
+            composable(Route.Profile.route) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Sección Perfil (en desarrollo)")
+                }
             }
         }
     }
