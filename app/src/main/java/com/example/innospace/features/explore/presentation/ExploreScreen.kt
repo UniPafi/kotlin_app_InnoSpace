@@ -57,7 +57,7 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel()) {
                             Text(opp.companyName, style = MaterialTheme.typography.bodyMedium)
                             Text(opp.category, style = MaterialTheme.typography.labelMedium)
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text(opp.description, style = MaterialTheme.typography.bodySmall)
+                            Text(opp.summary, style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 }

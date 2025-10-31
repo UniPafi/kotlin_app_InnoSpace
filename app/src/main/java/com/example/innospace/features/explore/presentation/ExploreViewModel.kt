@@ -2,7 +2,7 @@ package com.example.innospace.features.explore.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.innospace.features.explore.domain.model.Opportunity
+import com.example.innospace.features.explore.domain.model.OpportunityCard
 import com.example.innospace.features.explore.domain.usecases.GetAllOpportunitiesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +38,6 @@ class ExploreViewModel @Inject constructor(
 
 data class ExploreUiState(
     val isLoading: Boolean = false,
-    val opportunities: List<Opportunity> = emptyList(),
+    val opportunities: List<OpportunityCard> = emptyList(),
     val error: String? = null
 )
