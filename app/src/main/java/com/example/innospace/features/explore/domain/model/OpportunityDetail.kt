@@ -7,5 +7,7 @@ data class OpportunityDetail(
     val category: String,
     val requirements: List<String>,
     val companyName: String,
-    val companyDescription: String
+    val companyDescription: String,
+    val companyLocation: String,
+    val companyPhotoUrl: String
 )
