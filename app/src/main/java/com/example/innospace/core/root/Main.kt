@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.Assignment
-import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Work
@@ -28,7 +26,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.innospace.core.navigation.Route
-import com.example.innospace.features.explore.presentation.ExploreScreen
+import com.example.innospace.features.explore.presentation.detail.OpportunityDetailScreen
+import com.example.innospace.features.explore.presentation.explore.ExploreScreen
 
 
 data class NavigationItem(
@@ -78,7 +77,24 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Route.Explore.route) {
-                ExploreScreen(viewModel = hiltViewModel())
+                ExploreScreen(
+                    navController = navController,
+                    viewModel = hiltViewModel()
+                )
+            }
+
+
+            composable(
+                route = "opportunityDetail/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments?.getLong("id") ?: return@composable
+                OpportunityDetailScreen(
+                    navController = navController,
+                    opportunityId = id,
+                    viewModel = hiltViewModel(),
+                    onBack = {navController.popBackStack()}
+                )
             }
 
             composable(Route.MyProjects.route) {

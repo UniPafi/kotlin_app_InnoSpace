@@ -1,6 +1,7 @@
-package com.example.innospace.features.explore.presentation
+package com.example.innospace.features.explore.presentation.explore
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,11 +35,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.innospace.features.explore.domain.model.OpportunityCard
 
 
 @Composable
-fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel()) {
+fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: NavController,) {
+
     val uiState by viewModel.uiState.collectAsState()
     val favorites by viewModel.favorites.collectAsState()
     var selectedTab by remember { mutableStateOf(0) }
@@ -95,7 +98,10 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel()) {
                 ) {
                     items(items) { (opp, isFav) ->
                         Card(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().clickable {
+                                navController.navigate("opportunityDetail/${opp.id}")
+                            },
+
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.surface,
                                 contentColor = MaterialTheme.colorScheme.onSurface

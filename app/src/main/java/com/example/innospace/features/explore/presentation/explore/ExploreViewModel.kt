@@ -1,4 +1,4 @@
-package com.example.innospace.features.explore.presentation
+package com.example.innospace.features.explore.presentation.explore
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

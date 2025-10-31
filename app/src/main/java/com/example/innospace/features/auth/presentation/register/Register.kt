@@ -180,7 +180,6 @@ fun Register(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Botón de registro
             Button(
                 onClick = { viewModel.register(name, email, password, accountType) },
                 colors = ButtonDefaults.buttonColors(
