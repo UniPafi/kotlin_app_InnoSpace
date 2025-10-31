@@ -1,10 +1,10 @@
 package com.example.innospace.features.explore.domain.model
 
 
-data class Opportunity(
+data class OpportunityCard(
     val id: Long,
     val title: String,
-    val description: String,
+    val summary: String,
     val category: String,
     val companyName: String
 )

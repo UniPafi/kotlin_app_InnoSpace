@@ -16,6 +16,7 @@ import com.example.innospace.features.auth.presentation.login.Login
 import com.example.innospace.features.auth.presentation.login.LoginViewModel
 import com.example.innospace.features.auth.presentation.register.Register
 import com.example.innospace.features.auth.presentation.register.RegisterViewModel
+import com.example.innospace.features.explore.presentation.detail.OpportunityDetailScreen
 
 @Composable
 fun AppNavigation() {
@@ -23,7 +24,7 @@ fun AppNavigation() {
 
     NavHost(navController, startDestination = Route.Login.route) {
 
-        // LOGIN
+
         composable(Route.Login.route) {
             val viewModel: LoginViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
@@ -58,6 +59,10 @@ fun AppNavigation() {
                 onNavigateToRegister = { navController.navigate(Route.Register.route) }
             )
         }
+
+
+
+
 
         // REGISTER
         composable(Route.Register.route) {
@@ -107,6 +112,8 @@ fun AppNavigation() {
             val userId = backStackEntry.arguments?.getLong("userId") ?: 0L
             val name = backStackEntry.arguments?.getString("name") ?: ""
             val email = backStackEntry.arguments?.getString("email") ?: ""
+
+
 
             Main(
                 userId = userId,
