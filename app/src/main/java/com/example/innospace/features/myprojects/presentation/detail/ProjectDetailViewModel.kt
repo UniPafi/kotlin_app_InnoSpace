@@ -17,10 +17,8 @@ class ProjectDetailViewModel @Inject constructor(
 
     private val _project = MutableStateFlow<Project?>(null)
     val project: StateFlow<Project?> = _project
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
-
     private val _isSuccess = MutableStateFlow(false)
     val isSuccess: StateFlow<Boolean> = _isSuccess
 
@@ -37,31 +35,25 @@ class ProjectDetailViewModel @Inject constructor(
             }
         }
     }
-
     fun publishProject() {
         _project.value?.id?.let { id ->
             viewModelScope.launch {
                 _isLoading.value = true
                 try {
-                    val publishedProject = projectRepository.publishProject(id)
-                    if (publishedProject != null) {
-                        _isSuccess.value = true
-                    }
+                    projectRepository.publishProject(id)
+                    _isSuccess.value = true
                 } catch (e: Exception) { e.printStackTrace() }
                 finally { _isLoading.value = false }
             }
         }
     }
-
     fun finalizeProject() {
         _project.value?.id?.let { id ->
             viewModelScope.launch {
                 _isLoading.value = true
                 try {
-                    val finalizedProject = projectRepository.finalizeProject(id)
-                    if (finalizedProject != null) {
-                        _isSuccess.value = true
-                    }
+                    projectRepository.finalizeProject(id)
+                    _isSuccess.value = true
                 } catch (e: Exception) { e.printStackTrace() }
                 finally { _isLoading.value = false }
             }
@@ -73,9 +65,8 @@ class ProjectDetailViewModel @Inject constructor(
             viewModelScope.launch {
                 _isLoading.value = true
                 try {
-                    if (projectRepository.deleteProject(id)) {
-                        _isSuccess.value = true
-                    }
+                    projectRepository.deleteProject(id)
+                    _isSuccess.value = true
                 } catch (e: Exception) { e.printStackTrace() }
                 finally { _isLoading.value = false }
             }

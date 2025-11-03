@@ -17,4 +17,8 @@ sealed class Route(val route: String) {
     object ProjectDetail : Route("project_detail/{projectId}") {
         fun createRoute(projectId: Long) = "project_detail/$projectId"
     }
+
+    object EditProject : Route("edit_project/{projectId}") {
+        fun createRoute(projectId: Long) = "edit_project/$projectId"
+    }
 }

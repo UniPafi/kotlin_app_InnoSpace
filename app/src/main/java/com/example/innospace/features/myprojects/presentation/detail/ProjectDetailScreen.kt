@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.innospace.core.navigation.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +31,6 @@ fun ProjectDetailScreen(
 
     val project by viewModel.project.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-
     val isSuccess by viewModel.isSuccess.collectAsState()
 
     LaunchedEffect(isSuccess) {
@@ -73,7 +73,6 @@ fun ProjectDetailScreen(
                     ) {
 
                         Text(it.title, style = MaterialTheme.typography.titleLarge)
-
                         Text(
                             text = "Estado: ${it.status}",
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
@@ -84,23 +83,29 @@ fun ProjectDetailScreen(
                                 else -> MaterialTheme.colorScheme.onSurface
                             }
                         )
-
                         Text(
                             text = "Categoría: ${it.category}",
                             style = MaterialTheme.typography.bodyLarge
                         )
-
                         Text(
                             text = it.summary,
                             style = MaterialTheme.typography.bodyLarge.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
                         )
-
-
                         Text(it.description, style = MaterialTheme.typography.bodyLarge)
 
                         Spacer(modifier = Modifier.height(24.dp))
 
                         if (it.status == "DRAFT") {
+                            Button(
+                                onClick = {
+                                    navController.navigate(Route.EditProject.createRoute(it.id))
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                enabled = !isLoading
+                            ) {
+                                Text("Editar Proyecto")
+                            }
+
                             Button(
                                 onClick = { viewModel.publishProject() },
                                 modifier = Modifier.fillMaxWidth(),
@@ -119,7 +124,6 @@ fun ProjectDetailScreen(
                                 Text("Marcar como Finalizado")
                             }
                         }
-
 
                         OutlinedButton(
                             onClick = { viewModel.deleteProject() },
