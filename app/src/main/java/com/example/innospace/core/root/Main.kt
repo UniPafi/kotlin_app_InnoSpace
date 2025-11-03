@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Assignment
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Work
@@ -28,6 +28,10 @@ import androidx.navigation.navArgument
 import com.example.innospace.core.navigation.Route
 import com.example.innospace.features.explore.presentation.detail.OpportunityDetailScreen
 import com.example.innospace.features.explore.presentation.explore.ExploreScreen
+import com.example.innospace.features.myprojects.presentation.add.AddProjectScreen
+import com.example.innospace.features.myprojects.presentation.detail.ProjectDetailScreen
+import com.example.innospace.features.myprojects.presentation.edit.EditProjectScreen
+import com.example.innospace.features.myprojects.presentation.list.MyProjectsScreen
 
 
 data class NavigationItem(
@@ -44,7 +48,7 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
     val navigationItems = listOf(
         NavigationItem(Icons.Default.Explore, "Explorar", Route.Explore.route),
         NavigationItem(Icons.Default.Work, "Mis Proyectos", Route.MyProjects.route),
-        NavigationItem(Icons.Default.Assignment, "Mis Postulaciones", Route.Applications.route),
+        NavigationItem(Icons.AutoMirrored.Filled.Assignment, "Mis Postulaciones", Route.Applications.route),
         NavigationItem(Icons.Default.Person, "Perfil", Route.Profile.route)
     )
 
@@ -76,13 +80,13 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
             startDestination = Route.Explore.route,
             modifier = Modifier.padding(paddingValues)
         ) {
+
             composable(Route.Explore.route) {
                 ExploreScreen(
                     navController = navController,
                     viewModel = hiltViewModel()
                 )
             }
-
 
             composable(
                 route = "opportunityDetail/{id}",
@@ -98,12 +102,57 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
             }
 
             composable(Route.MyProjects.route) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Sección Mis Proyectos (en desarrollo)")
-                }
+                MyProjectsScreen(
+                    viewModel = hiltViewModel(),
+                    navController = navController,
+                    studentId = userId
+                )
+            }
+
+            composable(
+                route = Route.AddProject.route,
+                arguments = listOf(navArgument("studentId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val studentId = backStackEntry.arguments?.getLong("studentId") ?: 0L
+                AddProjectScreen(
+                    viewModel = hiltViewModel(),
+                    studentId = studentId,
+                    onProjectCreated = {
+                        navController.popBackStack()
+                    },
+                    onNavigateBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable(
+                route = Route.ProjectDetail.route,
+                arguments = listOf(navArgument("projectId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val projectId = backStackEntry.arguments?.getLong("projectId") ?: 0L
+                ProjectDetailScreen(
+                    viewModel = hiltViewModel(),
+                    projectId = projectId,
+                    navController = navController
+                )
+            }
+
+            composable(
+                route = Route.EditProject.route,
+                arguments = listOf(navArgument("projectId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val projectId = backStackEntry.arguments?.getLong("projectId") ?: 0L
+                EditProjectScreen(
+                    viewModel = hiltViewModel(),
+                    projectId = projectId,
+                    onProjectUpdated = {
+                        navController.popBackStack()
+                    },
+                    onNavigateBack = {
+                        navController.popBackStack()
+                    }
+                )
             }
 
             composable(Route.Applications.route) {
