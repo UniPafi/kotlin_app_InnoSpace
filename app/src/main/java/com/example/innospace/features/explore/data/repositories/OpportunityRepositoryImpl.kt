@@ -2,6 +2,7 @@ package com.example.innospace.features.explore.data.repositories
 
 import com.example.innospace.features.explore.data.remote.dto.ManagerProfileDto
 import com.example.innospace.features.explore.data.remote.dto.OpportunityDto
+import com.example.innospace.features.explore.data.remote.dto.StudentApplicationRequestDto
 import com.example.innospace.features.explore.data.remote.services.ManagerProfileService
 import com.example.innospace.features.explore.data.remote.services.OpportunityService
 import com.example.innospace.features.explore.domain.model.OpportunityCard
@@ -57,6 +58,10 @@ class OpportunityRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun applyToOpportunity(opportunityId: Long, studentId: Long) {
+        val request = StudentApplicationRequestDto(opportunityId, studentId)
+        opportunityService.applyToOpportunity(request)
+    }
 
     override suspend fun getOpportunityDetail(id: Long): OpportunityDetail = withContext(Dispatchers.IO) {
         val dto = opportunityService.getOpportunityById(id)
