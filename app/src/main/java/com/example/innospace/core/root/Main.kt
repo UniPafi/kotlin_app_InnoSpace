@@ -79,21 +79,28 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
             composable(Route.Explore.route) {
                 ExploreScreen(
                     navController = navController,
-                    viewModel = hiltViewModel()
+                    viewModel = hiltViewModel(),
+                    userId = userId
                 )
             }
 
 
             composable(
-                route = "opportunityDetail/{id}",
-                arguments = listOf(navArgument("id") { type = NavType.LongType })
+                route = "opportunityDetail/{id}/{studentId}",
+                arguments = listOf(
+
+                    navArgument("id") { type = NavType.LongType },
+                    navArgument("studentId") { type = NavType.LongType }
+                )
             ) { backStackEntry ->
                 val id = backStackEntry.arguments?.getLong("id") ?: return@composable
+                val studentId = backStackEntry.arguments?.getLong("studentId") ?: return@composable
                 OpportunityDetailScreen(
                     navController = navController,
                     opportunityId = id,
                     viewModel = hiltViewModel(),
-                    onBack = {navController.popBackStack()}
+                    onBack = {navController.popBackStack()},
+                    studentId = studentId
                 )
             }
 
