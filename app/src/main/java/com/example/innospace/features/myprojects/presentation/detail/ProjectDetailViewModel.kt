@@ -21,13 +21,13 @@ class ProjectDetailViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _actionCompleted = MutableStateFlow(false)
-    val actionCompleted: StateFlow<Boolean> = _actionCompleted
+    private val _isSuccess = MutableStateFlow(false)
+    val isSuccess: StateFlow<Boolean> = _isSuccess
 
     fun loadProject(projectId: Long) {
         viewModelScope.launch {
             _isLoading.value = true
-            _actionCompleted.value = false
+            _isSuccess.value = false
             try {
                 _project.value = projectRepository.getProjectById(projectId)
             } catch (e: Exception) {
@@ -44,9 +44,8 @@ class ProjectDetailViewModel @Inject constructor(
                 _isLoading.value = true
                 try {
                     val publishedProject = projectRepository.publishProject(id)
-
                     if (publishedProject != null) {
-                        _actionCompleted.value = true
+                        _isSuccess.value = true
                     }
                 } catch (e: Exception) { e.printStackTrace() }
                 finally { _isLoading.value = false }
@@ -61,7 +60,7 @@ class ProjectDetailViewModel @Inject constructor(
                 try {
                     val finalizedProject = projectRepository.finalizeProject(id)
                     if (finalizedProject != null) {
-                        _actionCompleted.value = true
+                        _isSuccess.value = true
                     }
                 } catch (e: Exception) { e.printStackTrace() }
                 finally { _isLoading.value = false }
@@ -75,7 +74,7 @@ class ProjectDetailViewModel @Inject constructor(
                 _isLoading.value = true
                 try {
                     if (projectRepository.deleteProject(id)) {
-                        _actionCompleted.value = true
+                        _isSuccess.value = true
                     }
                 } catch (e: Exception) { e.printStackTrace() }
                 finally { _isLoading.value = false }

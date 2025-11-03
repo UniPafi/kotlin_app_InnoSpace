@@ -31,10 +31,10 @@ fun ProjectDetailScreen(
     val project by viewModel.project.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    val actionCompleted by viewModel.actionCompleted.collectAsState()
+    val isSuccess by viewModel.isSuccess.collectAsState()
 
-    LaunchedEffect(actionCompleted) {
-        if (actionCompleted) {
+    LaunchedEffect(isSuccess) {
+        if (isSuccess) {
             navController.popBackStack()
         }
     }
