@@ -22,7 +22,10 @@ class AuthRepositoryImpl @Inject constructor(
                 response.body()?.let { dto ->
 
                     dto.token?.let { token ->
-                        sessionManager.saveAuthToken(token)
+                        sessionManager.saveUserSession(
+                            userId = dto.id,
+                            token = token
+                        )
                     }
 
                     return@withContext User(

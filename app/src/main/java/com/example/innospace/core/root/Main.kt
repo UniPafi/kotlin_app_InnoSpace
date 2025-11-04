@@ -172,12 +172,9 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
             }
 
             composable(Route.Profile.route) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Sección Perfil (en desarrollo)")
-                }
+                com.example.innospace.features.profile.presentation.ProfileScreen(
+                    onLogout = onLogout
+                )
             }
         }
     }
