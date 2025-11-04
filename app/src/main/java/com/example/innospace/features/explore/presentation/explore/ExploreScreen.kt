@@ -40,7 +40,7 @@ import com.example.innospace.features.explore.domain.model.OpportunityCard
 
 
 @Composable
-fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: NavController,) {
+fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: NavController, userId: Long) {
 
     val uiState by viewModel.uiState.collectAsState()
     val favorites by viewModel.favorites.collectAsState()
@@ -99,7 +99,7 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: 
                     items(items) { (opp, isFav) ->
                         Card(
                             modifier = Modifier.fillMaxWidth().clickable {
-                                navController.navigate("opportunityDetail/${opp.id}")
+                                navController.navigate("opportunityDetail/${opp.id}/$userId")
                             },
 
                             colors = CardDefaults.cardColors(
