@@ -2,6 +2,7 @@ package com.example.innospace.features.explore.presentation.detail
 
 import android.graphics.BitmapFactory
 import android.util.Base64
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -42,6 +44,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 fun OpportunityDetailScreen(
     navController: NavController,
     opportunityId: Long,
+    studentId: Long,
     viewModel: OpportunityDetailViewModel = hiltViewModel(),
     onBack: () -> Unit
 ) {
@@ -64,6 +67,7 @@ fun OpportunityDetailScreen(
         }
         is OpportunityDetailUiState.Success -> {
             val detail = (uiState as OpportunityDetailUiState.Success).detail
+            val context = LocalContext.current
             val bitmap = remember(detail.companyPhotoUrl) {
                 try {
                     val imageBytes = Base64.decode(detail.companyPhotoUrl, Base64.DEFAULT)
@@ -115,6 +119,26 @@ fun OpportunityDetailScreen(
                 }
                 Spacer(Modifier.height(16.dp))
                 Text("Ubicación: ${detail.companyLocation}")
+                Spacer(Modifier.height(24.dp))
+                Button(
+                    onClick = {
+                        viewModel.applyToOpportunity(
+                            opportunityId = detail.id,
+                            studentId = studentId,
+                            onSuccess = {
+                                Toast.makeText(context, "Postulación enviada con éxito", Toast.LENGTH_SHORT).show()
+                            },
+                            onError = { message ->
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text("Postular a esta oportunidad")
+                }
+
+
                 Spacer(Modifier.height(24.dp))
                 Button(onClick = onBack, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                     Text("Volver")
