@@ -33,10 +33,3 @@ fun RoundedIcon(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun RoundedIconPreview() {
-    InnoSpaceTheme {
-        RoundedIcon(icon = Icons.Default.Notifications, contentDescription = "Notifications")
-    }
-}
