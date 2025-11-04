@@ -117,6 +117,16 @@ fun ProjectDetailScreen(
 
                         if (it.status == "PUBLISHED") {
                             Button(
+                                onClick = {
+                                    navController.navigate(Route.ProjectCollaborators.createRoute(it.id))
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                enabled = !isLoading
+                            ) {
+                                Text("Ver Colaboradores")
+                            }
+
+                            Button(
                                 onClick = { viewModel.finalizeProject() },
                                 modifier = Modifier.fillMaxWidth(),
                                 enabled = !isLoading

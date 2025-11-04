@@ -29,6 +29,7 @@ import com.example.innospace.core.navigation.Route
 import com.example.innospace.features.explore.presentation.detail.OpportunityDetailScreen
 import com.example.innospace.features.explore.presentation.explore.ExploreScreen
 import com.example.innospace.features.myprojects.presentation.add.AddProjectScreen
+import com.example.innospace.features.myprojects.presentation.collaborators.ProjectCollaboratorsScreen
 import com.example.innospace.features.myprojects.presentation.detail.ProjectDetailScreen
 import com.example.innospace.features.myprojects.presentation.edit.EditProjectScreen
 import com.example.innospace.features.myprojects.presentation.list.MyProjectsScreen
@@ -156,6 +157,20 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
                     onProjectUpdated = {
                         navController.popBackStack()
                     },
+                    onNavigateBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable(
+                route = Route.ProjectCollaborators.route,
+                arguments = listOf(navArgument("projectId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val projectId = backStackEntry.arguments?.getLong("projectId") ?: 0L
+                ProjectCollaboratorsScreen(
+                    viewModel = hiltViewModel(),
+                    projectId = projectId,
                     onNavigateBack = {
                         navController.popBackStack()
                     }
