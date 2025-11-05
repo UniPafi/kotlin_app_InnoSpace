@@ -28,7 +28,6 @@ class ApplicationRepositoryImpl @Inject constructor(
             if (resp != null && resp.isSuccessful) {
                 return@withContext resp.body() ?: emptyList()
             } else {
-                // logear código y body (si existe)
                 val code = resp?.code()
                 val err = try { resp?.errorBody()?.string() } catch (_: Exception) { null }
                 Log.e("ApplicationsRepo", "getApplicationsByStudent failed. code=$code errorBody=$err")
