@@ -19,6 +19,7 @@ class ProjectDetailViewModel @Inject constructor(
     val project: StateFlow<Project?> = _project
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
+
     private val _isSuccess = MutableStateFlow(false)
     val isSuccess: StateFlow<Boolean> = _isSuccess
 
@@ -35,6 +36,7 @@ class ProjectDetailViewModel @Inject constructor(
             }
         }
     }
+
     fun publishProject() {
         _project.value?.id?.let { id ->
             viewModelScope.launch {
@@ -47,6 +49,7 @@ class ProjectDetailViewModel @Inject constructor(
             }
         }
     }
+
     fun finalizeProject() {
         _project.value?.id?.let { id ->
             viewModelScope.launch {

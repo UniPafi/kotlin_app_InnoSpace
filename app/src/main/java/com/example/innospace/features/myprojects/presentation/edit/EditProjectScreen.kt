@@ -40,6 +40,7 @@ fun EditProjectScreen(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text("Editar Proyecto") },
@@ -50,7 +51,12 @@ fun EditProjectScreen(
                             contentDescription = "Volver"
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                )
             )
         }
     ) { paddingValues ->
@@ -67,7 +73,11 @@ fun EditProjectScreen(
                 onValueChange = { viewModel.updateTitle(it) },
                 label = { Text("Título de la Idea") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                )
             )
 
             OutlinedTextField(
@@ -75,7 +85,11 @@ fun EditProjectScreen(
                 onValueChange = { viewModel.updateSummary(it) },
                 label = { Text("Resumen (Summary)") },
                 modifier = Modifier.fillMaxWidth(),
-                maxLines = 3
+                maxLines = 3,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                )
             )
 
             OutlinedTextField(
@@ -83,7 +97,11 @@ fun EditProjectScreen(
                 onValueChange = { viewModel.updateCategory(it) },
                 label = { Text("Categoría (Ej: App Móvil)") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                )
             )
 
             OutlinedTextField(
@@ -92,7 +110,11 @@ fun EditProjectScreen(
                 label = { Text("Descripción Detallada") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(200.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -100,7 +122,11 @@ fun EditProjectScreen(
             Button(
                 onClick = { viewModel.updateProject(projectId) },
                 enabled = !isLoading,
-                modifier = Modifier.fillMaxWidth().height(48.dp)
+                modifier = Modifier.fillMaxWidth().height(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(modifier = Modifier.size(24.dp))
