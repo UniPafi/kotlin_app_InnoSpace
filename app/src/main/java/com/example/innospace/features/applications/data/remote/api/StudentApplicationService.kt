@@ -1,16 +1,24 @@
-package com.example.innospace.features.applications.data.remote
+package com.example.innospace.features.applications.data.remote.api
 
 import com.example.innospace.features.applications.data.remote.dto.StudentApplicationDto
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.PATCH
+import retrofit2.http.Path
+import retrofit2.http.POST
+import retrofit2.http.Body
+import retrofit2.http.Header
 
 interface StudentApplicationsService {
 
     @GET("api/v1/student-applications")
-    suspend fun getAllApplications(): Response<List<StudentApplicationDto>>
+    suspend fun getAllApplications(@Header("Authorization") auth: String? = null): Response<List<StudentApplicationDto>>
 
-    @GET("api/v1/student-applications/student/{studentId}")
-    suspend fun getApplicationsByStudent(@Path("studentId") studentId: Long): Response<List<StudentApplicationDto>>
+    @GET("api/v1/student-applications/{studentId}")
+    suspend fun getApplicationsByStudent(
+        @Path("studentId") studentId: Long,
+        @Header("Authorization") auth: String? = null
+    ): Response<List<StudentApplicationDto>>
 
     @GET("api/v1/student-applications/opportunities/{opportunityId}")
     suspend fun getApplicationsByOpportunity(@Path("opportunityId") opportunityId: Long): Response<List<StudentApplicationDto>>
