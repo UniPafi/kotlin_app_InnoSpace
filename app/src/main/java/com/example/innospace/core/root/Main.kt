@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.innospace.core.navigation.Route
+import com.example.innospace.features.applications.presentation.ApplicationsScreen
 import com.example.innospace.features.explore.presentation.detail.OpportunityDetailScreen
 import com.example.innospace.features.explore.presentation.explore.ExploreScreen
 import com.example.innospace.features.myprojects.presentation.add.AddProjectScreen
@@ -178,12 +179,10 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
             }
 
             composable(Route.Applications.route) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Sección Mis Postulaciones (en desarrollo)")
-                }
+                ApplicationsScreen(
+                    viewModel = hiltViewModel(),
+                    studentId = userId
+                )
             }
 
             composable(Route.Profile.route) {
