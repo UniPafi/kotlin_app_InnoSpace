@@ -6,8 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.innospace.core.networking.SessionManager
 import com.example.innospace.features.applications.data.remote.dto.OpportunityCardDto
 import com.example.innospace.features.applications.domain.repository.ApplicationRepository
-import com.example.innospace.features.applications.domain.usecase.AcceptApplicationUseCase
-import com.example.innospace.features.applications.domain.usecase.RejectApplicationUseCase
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,9 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ApplicationsViewModel @Inject constructor(
-    private val repository: ApplicationRepository,
-    private val acceptApplicationUseCase: AcceptApplicationUseCase,
-    private val rejectApplicationUseCase: RejectApplicationUseCase
+    private val repository: ApplicationRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ApplicationsUiState())
@@ -43,41 +40,7 @@ class ApplicationsViewModel @Inject constructor(
         }
     }
 
-    fun onAccept(id: Long) {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-            try {
-                val result = acceptApplicationUseCase(id)
-                if (result != null) {
-                    currentStudentId?.let { loadApplications(it) } ?: run {
-                        _uiState.value = _uiState.value.copy(isLoading = false, error = "StudentId no disponible para recargar")
-                    }
-                } else {
-                    _uiState.value = _uiState.value.copy(isLoading = false, error = "No se pudo aceptar la postulación")
-                }
-            } catch (e: Exception) {
-                Log.e("ApplicationsVM", "Error al aceptar: ${e.message}", e)
-                _uiState.value = _uiState.value.copy(isLoading = false, error = "Error al aceptar la postulación")
-            }
-        }
-    }
 
-    fun onReject(id: Long) {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-            try {
-                val result = rejectApplicationUseCase(id)
-                if (result != null) {
-                    currentStudentId?.let { loadApplications(it) } ?: run {
-                        _uiState.value = _uiState.value.copy(isLoading = false, error = "StudentId no disponible para recargar")
-                    }
-                } else {
-                    _uiState.value = _uiState.value.copy(isLoading = false, error = "No se pudo rechazar la postulación")
-                }
-            } catch (e: Exception) {
-                Log.e("ApplicationsVM", "Error al rechazar: ${e.message}", e)
-                _uiState.value = _uiState.value.copy(isLoading = false, error = "Error al rechazar la postulación")
-            }
-        }
+
+
     }
-}

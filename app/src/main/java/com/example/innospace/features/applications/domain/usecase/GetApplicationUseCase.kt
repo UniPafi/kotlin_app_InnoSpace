@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetApplicationsUseCase @Inject constructor(
     private val repository: ApplicationRepository
 ) {
-    suspend operator fun invoke(studentId: Long) = repository.getApplicationsForStudent(studentId)
+    suspend operator fun invoke(studentId: Long) = repository.getOpportunityCardsForStudent(studentId)
 }

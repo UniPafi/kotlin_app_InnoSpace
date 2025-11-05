@@ -55,14 +55,7 @@ fun ApplicationsScreen(
                             Text(text = "Alumno ID: ${card.studentId}")
                             Text(text = "Estado: ${card.status ?: "DESCONOCIDO"}")
 
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                                TextButton(onClick = { viewModel.onReject(card.id) }) {
-                                    Text("Rechazar")
-                                }
-                                TextButton(onClick = { viewModel.onAccept(card.id) }) {
-                                    Text("Aceptar")
-                                }
-                            }
+
                         }
                     }
                 }
