@@ -27,7 +27,6 @@ fun AddProjectScreen(
     val summary by viewModel.summary.collectAsState()
     val category by viewModel.category.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-
     val isSuccess by viewModel.isSuccess.collectAsState()
 
     LaunchedEffect(isSuccess) {
@@ -37,6 +36,7 @@ fun AddProjectScreen(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text("Publicar Idea") },
@@ -47,7 +47,12 @@ fun AddProjectScreen(
                             contentDescription = "Volver"
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                )
             )
         }
     ) { paddingValues ->
@@ -64,7 +69,11 @@ fun AddProjectScreen(
                 onValueChange = { viewModel.updateTitle(it) },
                 label = { Text("Título de la Idea") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                )
             )
 
             OutlinedTextField(
@@ -72,7 +81,11 @@ fun AddProjectScreen(
                 onValueChange = { viewModel.updateSummary(it) },
                 label = { Text("Resumen (Summary)") },
                 modifier = Modifier.fillMaxWidth(),
-                maxLines = 3
+                maxLines = 3,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                )
             )
 
             OutlinedTextField(
@@ -80,7 +93,11 @@ fun AddProjectScreen(
                 onValueChange = { viewModel.updateCategory(it) },
                 label = { Text("Categoría (Ej: App Móvil)") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                )
             )
 
             OutlinedTextField(
@@ -89,7 +106,11 @@ fun AddProjectScreen(
                 label = { Text("Descripción Detallada") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(200.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -97,7 +118,11 @@ fun AddProjectScreen(
             Button(
                 onClick = { viewModel.createProject(studentId) },
                 enabled = !isLoading,
-                modifier = Modifier.fillMaxWidth().height(48.dp)
+                modifier = Modifier.fillMaxWidth().height(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(modifier = Modifier.size(24.dp))

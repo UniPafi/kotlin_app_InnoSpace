@@ -1,5 +1,6 @@
 package com.example.innospace.features.myprojects.presentation.detail
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -40,6 +42,7 @@ fun ProjectDetailScreen(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text(project?.title ?: "Detalle del Proyecto") },
@@ -50,7 +53,12 @@ fun ProjectDetailScreen(
                             contentDescription = "Volver"
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                )
             )
         }
     ) { paddingValues ->
@@ -75,7 +83,7 @@ fun ProjectDetailScreen(
                         Text(it.title, style = MaterialTheme.typography.titleLarge)
                         Text(
                             text = "Estado: ${it.status}",
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                             color = when (it.status) {
                                 "PUBLISHED" -> MaterialTheme.colorScheme.primary
                                 "DRAFT" -> MaterialTheme.colorScheme.onSurface
@@ -95,21 +103,31 @@ fun ProjectDetailScreen(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
+                        val buttonModifier = Modifier.fillMaxWidth().height(48.dp)
+                        val primaryButtonColors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        )
+                        val secondaryButtonColors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary
+                        )
+
                         if (it.status == "DRAFT") {
                             Button(
                                 onClick = {
                                     navController.navigate(Route.EditProject.createRoute(it.id))
                                 },
-                                modifier = Modifier.fillMaxWidth(),
-                                enabled = !isLoading
+                                modifier = buttonModifier,
+                                enabled = !isLoading,
+                                colors = secondaryButtonColors
                             ) {
                                 Text("Editar Proyecto")
                             }
 
                             Button(
                                 onClick = { viewModel.publishProject() },
-                                modifier = Modifier.fillMaxWidth(),
-                                enabled = !isLoading
+                                modifier = buttonModifier,
+                                enabled = !isLoading,
+                                colors = primaryButtonColors
                             ) {
                                 Text("Publicar Proyecto")
                             }
@@ -118,8 +136,9 @@ fun ProjectDetailScreen(
                         if (it.status == "PUBLISHED") {
                             Button(
                                 onClick = { viewModel.finalizeProject() },
-                                modifier = Modifier.fillMaxWidth(),
-                                enabled = !isLoading
+                                modifier = buttonModifier,
+                                enabled = !isLoading,
+                                colors = primaryButtonColors
                             ) {
                                 Text("Marcar como Finalizado")
                             }
@@ -127,9 +146,10 @@ fun ProjectDetailScreen(
 
                         OutlinedButton(
                             onClick = { viewModel.deleteProject() },
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = buttonModifier,
                             enabled = !isLoading,
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red)
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red),
+                            border = BorderStroke(1.dp, Color.Red.copy(alpha = 0.7f))
                         ) {
                             Text("Eliminar Proyecto")
                         }
