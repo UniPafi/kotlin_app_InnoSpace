@@ -12,12 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 
-import androidx.compose.ui.text.googlefonts.GoogleFont
-import androidx.compose.ui.text.googlefonts.Font
-import com.example.innospace.R
 
 
 private val LightColorScheme = lightColorScheme(
@@ -41,22 +36,7 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = Color(0xFFE0E0E0),
     onSurface = Color(0xFFE0E0E0)
 )
-val provider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
-)
 
-val NunitoSans = FontFamily(
-    Font(googleFont = GoogleFont("Nunito Sans"), fontProvider = provider, weight = FontWeight.Normal),
-    Font(googleFont = GoogleFont("Nunito Sans"), fontProvider = provider, weight = FontWeight.W600),
-    Font(googleFont = GoogleFont("Nunito Sans"), fontProvider = provider, weight = FontWeight.Bold)
-)
-
-val Inter = FontFamily(
-    Font(googleFont = GoogleFont("Inter"), fontProvider = provider, weight = FontWeight.Normal),
-    Font(googleFont = GoogleFont("Inter"), fontProvider = provider, weight = FontWeight.Medium)
-)
 @Composable
 fun InnoSpaceTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -74,7 +54,7 @@ fun InnoSpaceTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = TypographyInnospace,
+        typography = Typography,
         content = content
     )
 }

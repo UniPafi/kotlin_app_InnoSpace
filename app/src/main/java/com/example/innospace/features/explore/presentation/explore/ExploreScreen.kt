@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -101,8 +102,11 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: 
 
 
             else -> {
+                val favoriteIds = favorites.map { it.id }.toSet()
                 val baseList = if (selectedTab == 0) {
-                    uiState.opportunities.map { it to false }
+                    uiState.opportunities.map { opp ->
+                        opp to (opp.id in favoriteIds)
+                    }
                 } else {
                     favorites.map {
                         OpportunityCard(
@@ -147,10 +151,14 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: 
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        opp.title,
+                                        text = opp.title,
                                         style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.primary
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.weight(1f),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
+
                                     IconButton(onClick = { viewModel.toggleFavorite(opp) }) {
                                         Icon(
                                             imageVector = if (isFav) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
@@ -162,6 +170,7 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: 
                                         )
                                     }
                                 }
+
                                 Text(opp.companyName, style = MaterialTheme.typography.bodyMedium)
                                 Text(opp.category, style = MaterialTheme.typography.labelMedium)
                                 Spacer(modifier = Modifier.height(4.dp))
