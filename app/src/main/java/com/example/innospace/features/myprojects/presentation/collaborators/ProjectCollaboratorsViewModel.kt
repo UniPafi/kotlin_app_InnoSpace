@@ -49,7 +49,6 @@ class ProjectCollaboratorsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 repository.acceptCollaboration(collaborationId)
-                // Recargar la lista para reflejar el cambio de estado
                 loadCollaborators(currentProjectId)
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = "Error al aceptar la colaboración") }
@@ -61,7 +60,6 @@ class ProjectCollaboratorsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 repository.rejectCollaboration(collaborationId)
-                // Recargar la lista para reflejar el cambio de estado
                 loadCollaborators(currentProjectId)
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = "Error al rechazar la colaboración") }
