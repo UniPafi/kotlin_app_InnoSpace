@@ -13,15 +13,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -45,7 +49,7 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: 
     val uiState by viewModel.uiState.collectAsState()
     val favorites by viewModel.favorites.collectAsState()
     var selectedTab by remember { mutableStateOf(0) }
-
+    var searchQuery by remember { mutableStateOf("") }
     val tabs = listOf("Convocatorias", "Favoritos")
 
     Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
@@ -67,6 +71,25 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: 
             }
         }
 
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            placeholder = { Text("Buscar convocatorias...") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Buscar"
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            shape = RoundedCornerShape(12.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)
+            )
+        )
         when {
             uiState.isLoading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
@@ -76,10 +99,11 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: 
                 Text("Error: ${uiState.error}")
             }
 
+
             else -> {
-                val items = if (selectedTab == 0)
+                val baseList = if (selectedTab == 0) {
                     uiState.opportunities.map { it to false }
-                else
+                } else {
                     favorites.map {
                         OpportunityCard(
                             id = it.id,
@@ -89,6 +113,14 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: 
                             companyName = it.companyName
                         ) to true
                     }
+                }
+
+                val filteredList = baseList.filter { (opp, _) ->
+                    searchQuery.isBlank() ||
+                            opp.title.contains(searchQuery, ignoreCase = true) ||
+                            opp.companyName.contains(searchQuery, ignoreCase = true) ||
+                            opp.category.contains(searchQuery, ignoreCase = true)
+                }
 
                 LazyColumn(
                     modifier = Modifier
@@ -96,7 +128,7 @@ fun ExploreScreen(viewModel: ExploreViewModel = hiltViewModel(), navController: 
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(items) { (opp, isFav) ->
+                    items(filteredList) { (opp, isFav) ->
                         Card(
                             modifier = Modifier.fillMaxWidth().clickable {
                                 navController.navigate("opportunityDetail/${opp.id}/$userId")
