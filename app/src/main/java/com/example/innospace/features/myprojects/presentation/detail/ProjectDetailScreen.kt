@@ -54,7 +54,7 @@ fun ProjectDetailScreen(
                 title = {
                     Text(
                         text = project?.title ?: "Detalle del Proyecto",
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium.copy(color = Color.Unspecified)
                     )
                 },
                 navigationIcon = {
