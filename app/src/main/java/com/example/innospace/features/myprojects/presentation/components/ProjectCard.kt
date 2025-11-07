@@ -30,7 +30,7 @@ fun ProjectCard(project: Project, onClick: () -> Unit) {
             .animateContentSize(),
         onClick = onClick,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         shape = RoundedCornerShape(16.dp)
@@ -49,7 +49,7 @@ fun ProjectCard(project: Project, onClick: () -> Unit) {
             Text(
                 text = project.summary,
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis

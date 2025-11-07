@@ -3,6 +3,7 @@ package com.example.innospace.features.myprojects.presentation.detail
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -14,11 +15,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.innospace.core.navigation.Route
+import com.example.innospace.core.ui.theme.PurplePrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +51,12 @@ fun ProjectDetailScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text(project?.title ?: "Detalle del Proyecto") },
+                title = {
+                    Text(
+                        text = project?.title ?: "Detalle del Proyecto",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
@@ -55,10 +66,13 @@ fun ProjectDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                    containerColor = PurplePrimary,
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
+                ),
+                modifier = Modifier
+                    .height(48.dp)
+                    .fillMaxWidth()
             )
         }
     ) { paddingValues ->
@@ -91,18 +105,57 @@ fun ProjectDetailScreen(
                                 else -> MaterialTheme.colorScheme.onSurface
                             }
                         )
+
                         Text(
-                            text = "Categoría: ${it.category}",
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append("Categoría: ")
+                                }
+                                append(it.category)
+                            },
                             style = MaterialTheme.typography.bodyLarge
                         )
+
                         Text(
-                            text = it.summary,
-                            style = MaterialTheme.typography.bodyLarge.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append("Resumen: ")
+                                }
+                                withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
+                                    append(it.summary)
+                                }
+                            },
+                            style = MaterialTheme.typography.bodyLarge
                         )
-                        Text(it.description, style = MaterialTheme.typography.bodyLarge)
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            tonalElevation = 2.dp
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Text(
+                                    text = "Descripción Detallada",
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                                Text(
+                                    text = it.description,
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                )
+                            }
+                        }
 
+
+                        Spacer(modifier = Modifier.height(16.dp))
                         val buttonModifier = Modifier.fillMaxWidth().height(48.dp)
                         val primaryButtonColors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary
