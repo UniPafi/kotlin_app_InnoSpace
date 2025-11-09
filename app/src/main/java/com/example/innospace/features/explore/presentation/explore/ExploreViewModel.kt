@@ -21,14 +21,13 @@ class ExploreViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ExploreUiState())
     val uiState: StateFlow<ExploreUiState> = _uiState
 
-    private val _favorites = MutableStateFlow<List<OpportunityEntity>>(emptyList())
-    val favorites: StateFlow<List<OpportunityEntity>> = _favorites
+    private val _favorites = MutableStateFlow<List<OpportunityCard>>(emptyList())
+    val favorites: StateFlow<List<OpportunityCard>> = _favorites
 
     init {
         loadOpportunities()
         observeFavorites()
     }
-
     private fun loadOpportunities() {
         viewModelScope.launch {
             try {
@@ -44,7 +43,15 @@ class ExploreViewModel @Inject constructor(
     private fun observeFavorites() {
         viewModelScope.launch {
             localRepository.getAllFavorites().collect { list ->
-                _favorites.value = list
+                _favorites.value = list.map { entity ->
+                    OpportunityCard(
+                        id = entity.id,
+                        title = entity.title,
+                        summary = entity.summary,
+                        category = entity.category,
+                        companyName = entity.companyName
+                    )
+                }
             }
         }
     }

@@ -15,17 +15,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.innospace.core.navigation.Route
 import com.example.innospace.core.ui.theme.PurplePrimary
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProjectDetailScreen(
@@ -42,9 +37,7 @@ fun ProjectDetailScreen(
     val isSuccess by viewModel.isSuccess.collectAsState()
 
     LaunchedEffect(isSuccess) {
-        if (isSuccess) {
-            navController.popBackStack()
-        }
+        if (isSuccess) navController.popBackStack()
     }
 
     Scaffold(
@@ -54,173 +47,209 @@ fun ProjectDetailScreen(
                 title = {
                     Text(
                         text = project?.title ?: "Detalle del Proyecto",
-                        style = MaterialTheme.typography.titleMedium.copy(color = Color.Unspecified)
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver"
+                            contentDescription = "Volver",
+                            tint = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PurplePrimary,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
+                    containerColor = PurplePrimary
                 ),
-                modifier = Modifier
-                    .height(48.dp)
-                    .fillMaxWidth()
+                modifier = Modifier.height(48.dp)
             )
         }
     ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            contentAlignment = Alignment.TopStart
-        ) {
-            if (isLoading && project == null) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else {
-                project?.let {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+        if (isLoading && project == null) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        } else {
+            project?.let { proj ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+
+                    Text(
+                        text = proj.title,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        StatusChip(status = proj.status)
+                        CategoryChip(category = proj.category)
+                    }
 
-                        Text(it.title, style = MaterialTheme.typography.titleLarge)
-                        Text(
-                            text = "Estado: ${it.status}",
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                            color = when (it.status) {
-                                "PUBLISHED" -> MaterialTheme.colorScheme.primary
-                                "DRAFT" -> MaterialTheme.colorScheme.onSurface
-                                "COMPLETED" -> MaterialTheme.colorScheme.secondary
-                                else -> MaterialTheme.colorScheme.onSurface
-                            }
-                        )
-
-                        Text(
-                            text = buildAnnotatedString {
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append("Categoría: ")
-                                }
-                                append(it.category)
-                            },
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-
-                        Text(
-                            text = buildAnnotatedString {
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append("Resumen: ")
-                                }
-                                withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
-                                    append(it.summary)
-                                }
-                            },
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp),
-                            color = MaterialTheme.colorScheme.surfaceVariant,
-                            tonalElevation = 2.dp
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Column(
-                                modifier = Modifier.padding(16.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Text(
-                                    text = "Descripción Detallada",
-                                    style = MaterialTheme.typography.titleMedium.copy(
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                            Text(
+                                text = "Resumen",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold
                                 )
-                                Text(
-                                    text = it.description,
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
+                            )
+                            Text(
+                                text = proj.summary,
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
-                            }
+                            )
                         }
+                    }
 
-
-                        Spacer(modifier = Modifier.height(16.dp))
-                        val buttonModifier = Modifier.fillMaxWidth().height(48.dp)
-                        val primaryButtonColors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        )
-                        val secondaryButtonColors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary
-                        )
-
-                        if (it.status == "DRAFT") {
-                            Button(
-                                onClick = {
-                                    navController.navigate(Route.EditProject.createRoute(it.id))
-                                },
-                                modifier = buttonModifier,
-                                enabled = !isLoading,
-                                colors = secondaryButtonColors
-                            ) {
-                                Text("Editar Proyecto")
-                            }
-
-                            Button(
-                                onClick = { viewModel.publishProject() },
-                                modifier = buttonModifier,
-                                enabled = !isLoading,
-                                colors = primaryButtonColors
-                            ) {
-                                Text("Publicar Proyecto")
-                            }
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = "Descripción Detallada",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                            Text(
+                                text = proj.description,
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            )
                         }
+                    }
 
-                        if (it.status == "PUBLISHED") {
-                            Button(
-                                onClick = {
-                                    navController.navigate(Route.ProjectCollaborators.createRoute(it.id))
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                enabled = !isLoading
-                            ) {
-                                Text("Ver Colaboradores")
+                    Spacer(modifier = Modifier.height(8.dp))
+
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        when (proj.status) {
+                            "DRAFT" -> {
+                                ActionButton(
+                                    text = "Editar Proyecto",
+                                    color = MaterialTheme.colorScheme.secondary
+                                ) {
+                                    navController.navigate(Route.EditProject.createRoute(proj.id))
+                                }
+                                ActionButton(
+                                    text = "Publicar Proyecto",
+                                    color = MaterialTheme.colorScheme.primary
+                                ) { viewModel.publishProject() }
                             }
 
-                            Button(
-                                onClick = { viewModel.finalizeProject() },
-                                modifier = buttonModifier,
-                                enabled = !isLoading,
-                                colors = primaryButtonColors
-                            ) {
-                                Text("Marcar como Finalizado")
+                            "PUBLISHED" -> {
+                                ActionButton(
+                                    text = "Ver Colaboradores",
+                                    color = MaterialTheme.colorScheme.secondary
+                                ) {
+                                    navController.navigate(Route.ProjectCollaborators.createRoute(proj.id))
+                                }
+                                ActionButton(
+                                    text = "Marcar como Finalizado",
+                                    color = MaterialTheme.colorScheme.primary
+                                ) { viewModel.finalizeProject() }
                             }
                         }
 
                         OutlinedButton(
                             onClick = { viewModel.deleteProject() },
-                            modifier = buttonModifier,
-                            enabled = !isLoading,
+                            modifier = Modifier.fillMaxWidth().height(48.dp),
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red),
                             border = BorderStroke(1.dp, Color.Red.copy(alpha = 0.7f))
                         ) {
                             Text("Eliminar Proyecto")
                         }
                     }
-                } ?: run {
-                    Text("No se pudo cargar el proyecto.", modifier = Modifier.align(Alignment.Center))
                 }
+            } ?: Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("No se pudo cargar el proyecto.")
             }
         }
+    }
+}
+
+
+
+@Composable
+fun StatusChip(status: String) {
+    val (text, color) = when (status) {
+        "PUBLISHED" -> "Publicado" to MaterialTheme.colorScheme.primary
+        "DRAFT" -> "Borrador" to MaterialTheme.colorScheme.outline
+        "COMPLETED" -> "Finalizado" to MaterialTheme.colorScheme.secondary
+        else -> status to MaterialTheme.colorScheme.onSurfaceVariant
+    }
+
+    Surface(
+        color = color.copy(alpha = 0.15f),
+        shape = RoundedCornerShape(50)
+    ) {
+        Text(
+            text = text,
+            color = color,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+            style = MaterialTheme.typography.labelMedium
+        )
+    }
+}
+
+@Composable
+fun CategoryChip(category: String) {
+    Surface(
+        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+        shape = RoundedCornerShape(50)
+    ) {
+        Text(
+            text = category,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+            style = MaterialTheme.typography.labelMedium
+        )
+    }
+}
+
+@Composable
+fun ActionButton(text: String, color: Color, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth().height(48.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = color)
+    ) {
+        Text(text)
     }
 }
