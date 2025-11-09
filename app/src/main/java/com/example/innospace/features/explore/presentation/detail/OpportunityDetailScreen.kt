@@ -1,7 +1,6 @@
 package com.example.innospace.features.explore.presentation.detail
 
 import android.graphics.BitmapFactory
-import android.graphics.Paint
 import android.util.Base64
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -27,15 +26,12 @@ import androidx.compose.material.icons.filled.Business
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -55,6 +51,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.innospace.core.ui.theme.LightBackground
+import com.example.innospace.core.ui.theme.PurplePrimary
 
 import com.example.innospace.features.explore.presentation.explore.ErrorView
 import com.example.innospace.features.explore.presentation.explore.LoadingView
@@ -97,20 +95,30 @@ fun OpportunityDetailScreen(
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { Text("Detalle de convocatoria") },
+                        title = {
+                            Text(
+                                text = "Detalle de convocatoria",
+                                color = Color.White,
+                                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                            )
+                        },
                         navigationIcon = {
                             IconButton(onClick = onBack) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Volver",
+                                    tint = Color.White
+                                )
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
+                            containerColor = PurplePrimary,
                             titleContentColor = Color.White,
                             navigationIconContentColor = Color.White
                         )
                     )
                 },
-                containerColor = MaterialTheme.colorScheme.background
+                containerColor = LightBackground
             ) { padding ->
                 Column(
                     modifier = Modifier

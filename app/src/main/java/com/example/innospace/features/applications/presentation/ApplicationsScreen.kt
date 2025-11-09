@@ -1,31 +1,23 @@
 package com.example.innospace.features.applications.presentation
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.innospace.core.ui.theme.LightBackground
 import com.example.innospace.core.ui.theme.PurplePrimary
 import com.example.innospace.core.ui.theme.TextSecondary
-import kotlin.collections.get
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApplicationsScreen(
     viewModel: ApplicationsViewModel = hiltViewModel(),
-    studentId: Long,
-    onBack: () -> Unit = {}
+    studentId: Long
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -46,15 +38,7 @@ fun ApplicationsScreen(
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = PurplePrimary),
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Atrás",
-                            tint = Color.White
-                        )
-                    }
-                }
+
             )
         },
         containerColor = LightBackground
