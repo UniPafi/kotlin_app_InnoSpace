@@ -2,9 +2,15 @@ package com.example.innospace.features.myprojects.presentation.add
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.automirrored.filled.ShortText
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.innospace.core.ui.theme.PurplePrimary
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddProjectScreen(
@@ -32,111 +37,100 @@ fun AddProjectScreen(
     val isSuccess by viewModel.isSuccess.collectAsState()
 
     LaunchedEffect(isSuccess) {
-        if (isSuccess) {
-            onProjectCreated()
-        }
+        if (isSuccess) onProjectCreated()
     }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = "Publicar Idea",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                },
+                title = { Text("Publicar Proyecto", style = MaterialTheme.typography.titleMedium,
+                    color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver"
-                        )
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = PurplePrimary,
                     titleContentColor = Color.White,
                     navigationIconContentColor = Color.White
-                ),
-                modifier = Modifier
-                    .height(48.dp)
-                    .fillMaxWidth()
+                )
             )
         }
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(20.dp)
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
+            Text(
+                "Completa los detalles de tu proyecto",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            )
+
             OutlinedTextField(
                 value = title,
                 onValueChange = { viewModel.updateTitle(it) },
-                label = { Text("Título de la Idea") },
-                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Título del proyecto") },
+                leadingIcon = { Icon(Icons.Default.Title, contentDescription = null) },
                 singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                )
+                modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
                 value = summary,
                 onValueChange = { viewModel.updateSummary(it) },
                 label = { Text("Resumen (Summary)") },
-                modifier = Modifier.fillMaxWidth(),
+                leadingIcon = { Icon(Icons.AutoMirrored.Filled.ShortText, contentDescription = null) },
                 maxLines = 3,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                )
+                modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
                 value = category,
                 onValueChange = { viewModel.updateCategory(it) },
                 label = { Text("Categoría (Ej: App Móvil)") },
-                modifier = Modifier.fillMaxWidth(),
+                leadingIcon = { Icon(Icons.Default.Category, contentDescription = null) },
                 singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                )
+                modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
                 value = description,
                 onValueChange = { viewModel.updateDescription(it) },
                 label = { Text("Descripción Detallada") },
+                leadingIcon = { Icon(Icons.Default.Description, contentDescription = null) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                )
+                    .heightIn(min = 180.dp, max = 300.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Button(
                 onClick = { viewModel.createProject(studentId) },
                 enabled = !isLoading,
-                modifier = Modifier.fillMaxWidth().height(48.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        strokeWidth = 2.dp,
+                        modifier = Modifier.size(22.dp)
+                    )
                 } else {
+                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
+                    Spacer(Modifier.width(6.dp))
                     Text("Publicar")
                 }
             }
