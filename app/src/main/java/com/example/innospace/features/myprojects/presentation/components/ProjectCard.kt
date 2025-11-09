@@ -80,22 +80,3 @@ fun ProjectCard(project: Project, onClick: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
-@Composable
-fun ProjectCardPreview() {
-    InnoSpaceTheme {
-        ProjectCard(
-            project = Project(
-                id = 1,
-                studentId = 1,
-                title = "Mi Primer Proyecto",
-                description = "Descripción larga...",
-                summary = "Este es un resumen corto del proyecto.",
-                category = "Mobile App",
-                status = "PUBLISHED"
-            ),
-            onClick = {}
-        )
-    }
-}
