@@ -50,7 +50,7 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
     val navigationItems = listOf(
         NavigationItem(Icons.Default.Explore, "Explorar", Route.Explore.route),
         NavigationItem(Icons.Default.Work, "Mis Proyectos", Route.MyProjects.route),
-        NavigationItem(Icons.AutoMirrored.Filled.Assignment, "Mis Postulaciones", Route.Applications.route),
+        NavigationItem(Icons.AutoMirrored.Filled.Assignment, "Postulaciones", Route.Applications.route),
         NavigationItem(Icons.Default.Person, "Perfil", Route.Profile.route)
     )
 

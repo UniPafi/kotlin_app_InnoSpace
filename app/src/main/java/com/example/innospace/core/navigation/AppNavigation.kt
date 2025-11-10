@@ -100,7 +100,7 @@ fun AppNavigation() {
             )
         }
 
-        // MAIN (post-login)
+        // MAIN
         composable(
             route = Route.StudentMain.route,
             arguments = listOf(
