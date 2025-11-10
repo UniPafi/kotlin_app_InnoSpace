@@ -1,7 +1,6 @@
 package com.example.innospace.core.root
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Assignment
@@ -9,6 +8,7 @@ import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -16,7 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,7 +56,8 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar ( containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface  ){
                 navigationItems.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = index == selectedIndex.intValue,
@@ -71,7 +72,10 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
                             }
                         },
                         icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label) }
+                        label = {  Text(
+                            item.label,
+                            style = MaterialTheme.typography.labelSmall
+                        ) }
                     )
                 }
             }

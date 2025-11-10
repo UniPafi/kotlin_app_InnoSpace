@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.innospace.core.navigation.Route
-import com.example.innospace.core.ui.theme.PurplePrimary
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProjectDetailScreen(
@@ -47,8 +47,8 @@ fun ProjectDetailScreen(
                 title = {
                     Text(
                         text = project?.title ?: "Detalle del Proyecto",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 },
                 navigationIcon = {
@@ -56,12 +56,12 @@ fun ProjectDetailScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Volver",
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PurplePrimary
+                    containerColor = MaterialTheme.colorScheme.primary
                 ),
                 modifier = Modifier.height(48.dp)
             )
@@ -187,13 +187,21 @@ fun ProjectDetailScreen(
                             }
                         }
 
-                        OutlinedButton(
+                        Button(
                             onClick = { viewModel.deleteProject() },
-                            modifier = Modifier.fillMaxWidth().height(48.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red),
-                            border = BorderStroke(1.dp, Color.Red.copy(alpha = 0.7f))
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error,
+                                contentColor = MaterialTheme.colorScheme.onError
+                            ),
+                            shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text("Eliminar Proyecto")
+                            Text(
+                                text = "Eliminar Proyecto",
+                                fontWeight = FontWeight.SemiBold
+                            )
                         }
                     }
                 }
@@ -247,9 +255,15 @@ fun CategoryChip(category: String) {
 fun ActionButton(text: String, color: Color, onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth().height(48.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = color)
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = color,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        shape = RoundedCornerShape(12.dp)
     ) {
-        Text(text)
+        Text(text, style = MaterialTheme.typography.labelLarge)
     }
 }

@@ -44,15 +44,24 @@ fun AddProjectScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("Publicar Proyecto", style = MaterialTheme.typography.titleMedium,
-                    color = Color.White) },
+                title = {
+                    Text(
+                        "Publicar Proyecto",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Volver",
+                            tint = Color.White
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PurplePrimary,
+                    containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = Color.White,
                     navigationIconContentColor = Color.White
                 )

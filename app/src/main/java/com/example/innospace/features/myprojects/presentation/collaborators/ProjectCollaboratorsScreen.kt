@@ -19,9 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.innospace.core.ui.theme.LightBackground
-import com.example.innospace.core.ui.theme.PurplePrimary
-import com.example.innospace.core.ui.theme.TextSecondary
 import com.example.innospace.features.myprojects.presentation.components.CollaboratorCard
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +34,7 @@ fun ProjectCollaboratorsScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
-        containerColor = LightBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -59,7 +56,9 @@ fun ProjectCollaboratorsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PurplePrimary
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
                 )
             )
         }
@@ -76,11 +75,11 @@ fun ProjectCollaboratorsScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        CircularProgressIndicator(color = PurplePrimary)
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                         Spacer(Modifier.height(8.dp))
                         Text(
                             "Cargando solicitudes...",
-                            color = TextSecondary,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -101,7 +100,7 @@ fun ProjectCollaboratorsScreen(
                         Spacer(Modifier.height(8.dp))
                         Text(
                             text = "Error: ${uiState.error}",
-                            color = Color.Red,
+                            color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -116,14 +115,14 @@ fun ProjectCollaboratorsScreen(
                         Icon(
                             imageVector = Icons.Default.PeopleOutline,
                             contentDescription = null,
-                            tint = TextSecondary,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(64.dp)
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
                             text = "No hay solicitudes de colaboración.",
                             style = MaterialTheme.typography.bodyLarge.copy(
-                                color = TextSecondary,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = FontWeight.Medium
                             ),
                             textAlign = TextAlign.Center,

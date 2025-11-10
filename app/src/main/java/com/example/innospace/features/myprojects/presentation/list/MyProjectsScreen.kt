@@ -35,8 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.innospace.core.navigation.Route
-import com.example.innospace.core.ui.theme.LightBackground
-import com.example.innospace.core.ui.theme.PurplePrimary
+
 
 
 import com.example.innospace.features.myprojects.presentation.components.ProjectCard
