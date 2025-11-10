@@ -81,6 +81,8 @@ fun AddProjectScreen(
                 leadingIcon = { Icon(Icons.Default.Title, contentDescription = null) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
+
+
             )
 
             OutlinedTextField(

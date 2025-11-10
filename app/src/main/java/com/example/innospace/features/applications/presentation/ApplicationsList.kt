@@ -44,7 +44,7 @@ fun ApplicationsList(applications: List<OpportunityCardDto>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(LightBackground)
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         items(applications) { card ->
@@ -55,7 +55,10 @@ fun ApplicationsList(applications: List<OpportunityCardDto>) {
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
                     .animateContentSize(),
-                colors = CardDefaults.cardColors(containerColor = SurfaceLight),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 onClick = { expanded = !expanded }
             ) {
@@ -66,7 +69,9 @@ fun ApplicationsList(applications: List<OpportunityCardDto>) {
                 ) {
                     Text(
                         text = card.opportunityTitle,
-                        style = MaterialTheme.typography.titleLarge.copy(color = PurplePrimary)
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     )
 
                     Spacer(Modifier.height(4.dp))
@@ -76,7 +81,9 @@ fun ApplicationsList(applications: List<OpportunityCardDto>) {
                             card.opportunityDescription ?: "Sin descripción"
                         else
                             (card.opportunityDescription?.take(100) ?: "Sin descripción") + if ((card.opportunityDescription?.length ?: 0) > 100) "..." else "",
-                        style = MaterialTheme.typography.bodyLarge.copy(color = TextPrimary)
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     )
 
                     Spacer(Modifier.height(8.dp))
@@ -89,7 +96,7 @@ fun ApplicationsList(applications: List<OpportunityCardDto>) {
                         Text(
                             text = "Estado: ${card.managerResponse ?: "Pendiente"}",
                             style = MaterialTheme.typography.labelSmall.copy(
-                                color = TextSecondary,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = FontWeight.SemiBold
                             )
                         )
@@ -97,13 +104,19 @@ fun ApplicationsList(applications: List<OpportunityCardDto>) {
                         TextButton(
                             onClick = { expanded = !expanded },
                             colors = ButtonDefaults.textButtonColors(
-                                contentColor = if (expanded) BlueAccent else PurplePrimary
+                                contentColor = if (expanded)
+                                    MaterialTheme.colorScheme.secondary
+                                else
+                                    MaterialTheme.colorScheme.primary
                             )
                         ) {
                             Text(
                                 if (expanded) "Ver menos" else "Ver más",
                                 style = MaterialTheme.typography.labelSmall.copy(
-                                    color = if (expanded) BlueAccent else PurplePrimary
+                                    color = if (expanded)
+                                    MaterialTheme.colorScheme.secondary
+                                else
+                                    MaterialTheme.colorScheme.primary
                                 )
                             )
                         }

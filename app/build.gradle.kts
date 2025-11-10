@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.hilt)
     kotlin("kapt")
     id("com.google.gms.google-services")
-    
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.21"
 }
 
 android {
@@ -45,10 +45,7 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
 
-        kotlinCompilerExtensionVersion = "1.5.11"
-    }
 
     // Configuración para Hilt
     hilt {
@@ -61,6 +58,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-tooling")
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)

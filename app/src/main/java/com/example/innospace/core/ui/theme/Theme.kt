@@ -28,14 +28,18 @@ private val LightColorScheme = lightColorScheme(
 
 private val DarkColorScheme = darkColorScheme(
     primary = PurpleLight,
-    onPrimary = TextPrimary,
+    onPrimary = Color.White,
     secondary = BlueAccent,
-    onSecondary = Color.Black,
+    onSecondary = Color.White,
     background = Color(0xFF121212),
     surface = Color(0xFF1E1E1E),
     onBackground = Color(0xFFE0E0E0),
-    onSurface = Color(0xFFE0E0E0)
+    onSurface = Color(0xFFE0E0E0),
+    surfaceVariant = Color(0xFF2A2A2A),
+    onSurfaceVariant = Color(0xFFB0B0B0),
+    outline = Color(0xFF4A4A4A)
 )
+
 
 @Composable
 fun InnoSpaceTheme(

@@ -32,16 +32,19 @@ fun ApplicationsScreen(
                     Text(
                         "Mis postulaciones",
                         style = MaterialTheme.typography.titleLarge.copy(
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = PurplePrimary),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                )
 
             )
         },
-        containerColor = LightBackground
+        containerColor  = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -51,7 +54,7 @@ fun ApplicationsScreen(
             when {
                 state.isLoading -> {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = PurplePrimary)
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                     }
                 }
 
@@ -60,7 +63,7 @@ fun ApplicationsScreen(
                         Text(
                             text = "Error: ${state.error}",
                             style = MaterialTheme.typography.bodyLarge,
-                            color = Color.Red
+                            color = MaterialTheme.colorScheme.error
                         )
                     }
                 }
@@ -69,8 +72,9 @@ fun ApplicationsScreen(
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(
                             text = "No tienes postulaciones aún.",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = TextSecondary
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         )
                     }
                 }

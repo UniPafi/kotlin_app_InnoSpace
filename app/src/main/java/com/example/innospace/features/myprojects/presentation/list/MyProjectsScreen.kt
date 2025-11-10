@@ -38,7 +38,6 @@ import com.example.innospace.core.navigation.Route
 import com.example.innospace.core.ui.theme.LightBackground
 import com.example.innospace.core.ui.theme.PurplePrimary
 
-import com.example.innospace.core.ui.theme.TextSecondary
 
 import com.example.innospace.features.myprojects.presentation.components.ProjectCard
 
@@ -57,19 +56,19 @@ fun MyProjectsScreen(
     }
 
     Scaffold(
-        containerColor = LightBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = "Mis Proyectos",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PurplePrimary,
-                    titleContentColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         },
@@ -78,8 +77,8 @@ fun MyProjectsScreen(
                 onClick = {
                     navController.navigate(Route.AddProject.createRoute(studentId))
                 },
-                containerColor = PurplePrimary,
-                contentColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 elevation = FloatingActionButtonDefaults.elevation(6.dp)
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Nuevo Proyecto")
@@ -95,9 +94,13 @@ fun MyProjectsScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        CircularProgressIndicator(color = PurplePrimary)
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                         Spacer(Modifier.height(8.dp))
-                        Text("Cargando proyectos...", color = TextSecondary)
+                        Text(
+                            "Cargando proyectos...",
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
             }
@@ -127,7 +130,7 @@ fun MyProjectsScreen(
                     Text(
                         text = "Aún no tienes proyectos.",
                         style = MaterialTheme.typography.bodyLarge.copy(
-                            color = TextSecondary,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                             fontWeight = FontWeight.Medium
                         )
                     )

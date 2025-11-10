@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "324391012189",
+    "project_id": "innospace-5d3ec",
+    "storage_bucket": "innospace-5d3ec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:324391012189:android:1f30f6d54c5a9fa48fcab4",
+        "android_client_info": {
+          "package_name": "com.example.innospace"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBum8GWyuEE3hW_GtD7egMBOYsvM9vW6o8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

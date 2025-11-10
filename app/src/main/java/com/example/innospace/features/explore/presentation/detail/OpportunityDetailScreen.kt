@@ -26,10 +26,12 @@ import androidx.compose.material.icons.filled.Business
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,7 +44,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -51,9 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.innospace.core.ui.theme.LightBackground
-import com.example.innospace.core.ui.theme.PurplePrimary
-
 import com.example.innospace.features.explore.presentation.explore.ErrorView
 import com.example.innospace.features.explore.presentation.explore.LoadingView
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -98,7 +96,7 @@ fun OpportunityDetailScreen(
                         title = {
                             Text(
                                 text = "Detalle de convocatoria",
-                                color = Color.White,
+                                color = colorScheme.onPrimary,
                                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                             )
                         },
@@ -107,18 +105,18 @@ fun OpportunityDetailScreen(
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Volver",
-                                    tint = Color.White
+                                    tint = colorScheme.onPrimary
                                 )
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = PurplePrimary,
-                            titleContentColor = Color.White,
-                            navigationIconContentColor = Color.White
+                            containerColor = colorScheme.primary,
+                            titleContentColor = colorScheme.onPrimary,
+                            navigationIconContentColor = colorScheme.onPrimary
                         )
                     )
                 },
-                containerColor = LightBackground
+                containerColor = colorScheme.background
             ) { padding ->
                 Column(
                     modifier = Modifier
@@ -140,13 +138,13 @@ fun OpportunityDetailScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(220.dp)
-                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                                .background(colorScheme.surfaceVariant),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Business,
                                 contentDescription = "Sin imagen",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                tint = colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                 modifier = Modifier.size(48.dp)
                             )
                         }
@@ -157,7 +155,7 @@ fun OpportunityDetailScreen(
                             text = detail.title,
                             style = MaterialTheme.typography.headlineSmall.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
+                                color = colorScheme.primary
                             )
                         )
 
@@ -166,7 +164,7 @@ fun OpportunityDetailScreen(
                         Text(
                             text = detail.companyName,
                             style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.secondary
+                                color = colorScheme.secondary
                             )
                         )
 
@@ -178,18 +176,28 @@ fun OpportunityDetailScreen(
                         ) {
                             AssistChip(
                                 onClick = {},
-                                label = { Text(detail.category) },
+                                label = {
+                                    Text(
+                                        detail.category,
+                                        color = colorScheme.onSurface
+                                    )
+                                },
                                 colors = AssistChipDefaults.assistChipColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                    containerColor = colorScheme.surfaceVariant
                                 )
                             )
 
                             detail.companyLocation?.let {
                                 AssistChip(
                                     onClick = {},
-                                    label = { Text(it) },
+                                    label = {
+                                        Text(
+                                            it,
+                                            color = colorScheme.onSurface
+                                        )
+                                    },
                                     colors = AssistChipDefaults.assistChipColors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                        containerColor = colorScheme.surfaceVariant
                                     )
                                 )
                             }
@@ -199,28 +207,46 @@ fun OpportunityDetailScreen(
 
                         Text(
                             "Descripción",
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.SemiBold,
+                                color = colorScheme.onBackground
+                            )
                         )
                         Spacer(Modifier.height(6.dp))
                         Text(
                             text = detail.description,
-                            style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 22.sp)
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                color = colorScheme.onBackground,
+                                lineHeight = 22.sp
+                            )
                         )
 
                         Spacer(Modifier.height(20.dp))
 
-
                         if (detail.requirements.isNotEmpty()) {
                             Text(
                                 "Requisitos",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = colorScheme.onBackground
+                                )
                             )
                             Spacer(Modifier.height(8.dp))
                             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                 detail.requirements.forEach { req ->
                                     Row(verticalAlignment = Alignment.Top) {
-                                        Text("• ", style = MaterialTheme.typography.bodyLarge)
-                                        Text(req, style = MaterialTheme.typography.bodyLarge)
+                                        Text(
+                                            "• ",
+                                            style = MaterialTheme.typography.bodyLarge.copy(
+                                                color = colorScheme.onBackground
+                                            )
+                                        )
+                                        Text(
+                                            req,
+                                            style = MaterialTheme.typography.bodyLarge.copy(
+                                                color = colorScheme.onBackground
+                                            )
+                                        )
                                     }
                                 }
                             }
@@ -234,7 +260,11 @@ fun OpportunityDetailScreen(
                                     opportunityId = detail.id,
                                     studentId = studentId,
                                     onSuccess = {
-                                        Toast.makeText(context, "Postulación enviada con éxito", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            context,
+                                            "Postulación enviada con éxito",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     },
                                     onError = { message ->
                                         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -244,7 +274,11 @@ fun OpportunityDetailScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            shape = RoundedCornerShape(12.dp)
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = colorScheme.primary,
+                                contentColor = colorScheme.onPrimary
+                            )
                         ) {
                             Text(
                                 "Postular a esta oportunidad",
@@ -252,19 +286,7 @@ fun OpportunityDetailScreen(
                             )
                         }
 
-                        Spacer(Modifier.height(12.dp))
 
-                        OutlinedButton(
-                            onClick = onBack,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp),
-                            shape = RoundedCornerShape(12.dp)
-                        ) {
-                            Text("Volver", style = MaterialTheme.typography.titleMedium)
-                        }
-
-                        Spacer(Modifier.height(24.dp))
                     }
                 }
             }

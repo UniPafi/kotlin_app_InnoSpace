@@ -64,7 +64,7 @@ fun Login(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    // Fondo con gradiente
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -79,7 +79,7 @@ fun Login(
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
-        // Contenedor principal
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -142,8 +142,14 @@ fun Login(
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f),
-                        cursorColor = MaterialTheme.colorScheme.primary
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                        cursorColor = MaterialTheme.colorScheme.primary,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
 
@@ -214,7 +220,7 @@ fun Login(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Enlace al registro
+
                 Row(horizontalArrangement = Arrangement.Center) {
                     Text(
                         "¿No tienes cuenta?",

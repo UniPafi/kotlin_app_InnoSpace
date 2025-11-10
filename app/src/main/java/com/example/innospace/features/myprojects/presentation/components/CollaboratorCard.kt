@@ -30,6 +30,8 @@ fun CollaboratorCard(
     onAccept: () -> Unit,
     onReject: () -> Unit
 ) {
+
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
