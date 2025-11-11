@@ -1,7 +1,6 @@
 package com.example.innospace.core.root
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Assignment
@@ -9,6 +8,7 @@ import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -16,7 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,9 +26,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.innospace.core.navigation.Route
+import com.example.innospace.features.applications.presentation.ApplicationsScreen
 import com.example.innospace.features.explore.presentation.detail.OpportunityDetailScreen
 import com.example.innospace.features.explore.presentation.explore.ExploreScreen
 import com.example.innospace.features.myprojects.presentation.add.AddProjectScreen
+import com.example.innospace.features.myprojects.presentation.collaborators.ProjectCollaboratorsScreen
 import com.example.innospace.features.myprojects.presentation.detail.ProjectDetailScreen
 import com.example.innospace.features.myprojects.presentation.edit.EditProjectScreen
 import com.example.innospace.features.myprojects.presentation.list.MyProjectsScreen
@@ -48,13 +50,14 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
     val navigationItems = listOf(
         NavigationItem(Icons.Default.Explore, "Explorar", Route.Explore.route),
         NavigationItem(Icons.Default.Work, "Mis Proyectos", Route.MyProjects.route),
-        NavigationItem(Icons.AutoMirrored.Filled.Assignment, "Mis Postulaciones", Route.Applications.route),
+        NavigationItem(Icons.AutoMirrored.Filled.Assignment, "Postulaciones", Route.Applications.route),
         NavigationItem(Icons.Default.Person, "Perfil", Route.Profile.route)
     )
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar ( containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface  ){
                 navigationItems.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = index == selectedIndex.intValue,
@@ -69,7 +72,10 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
                             }
                         },
                         icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label) }
+                        label = {  Text(
+                            item.label,
+                            style = MaterialTheme.typography.labelSmall
+                        ) }
                     )
                 }
             }
@@ -162,22 +168,31 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
                 )
             }
 
+            composable(
+                route = Route.ProjectCollaborators.route,
+                arguments = listOf(navArgument("projectId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val projectId = backStackEntry.arguments?.getLong("projectId") ?: 0L
+                ProjectCollaboratorsScreen(
+                    viewModel = hiltViewModel(),
+                    projectId = projectId,
+                    onNavigateBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
             composable(Route.Applications.route) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Sección Mis Postulaciones (en desarrollo)")
-                }
+                ApplicationsScreen(
+                    viewModel = hiltViewModel(),
+                    studentId = userId
+                )
             }
 
             composable(Route.Profile.route) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Sección Perfil (en desarrollo)")
-                }
+                com.example.innospace.features.profile.presentation.ProfileScreen(
+                    onLogout = onLogout
+                )
             }
         }
     }

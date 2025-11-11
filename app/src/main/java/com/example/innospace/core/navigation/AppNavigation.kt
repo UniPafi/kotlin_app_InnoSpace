@@ -16,7 +16,6 @@ import com.example.innospace.features.auth.presentation.login.Login
 import com.example.innospace.features.auth.presentation.login.LoginViewModel
 import com.example.innospace.features.auth.presentation.register.Register
 import com.example.innospace.features.auth.presentation.register.RegisterViewModel
-import com.example.innospace.features.explore.presentation.detail.OpportunityDetailScreen
 
 @Composable
 fun AppNavigation() {
@@ -71,13 +70,7 @@ fun AppNavigation() {
 
             LaunchedEffect(uiState.user) {
                 uiState.user?.let {
-                    navController.navigate(
-                        Route.StudentMain.createRoute(
-                            userId = it.id,
-                            name = it.name ?: it.email,
-                            email = it.email
-                        )
-                    ) {
+                    navController.navigate(Route.Login.route) {
                         popUpTo(Route.Register.route) { inclusive = true }
                     }
                 }
@@ -86,13 +79,7 @@ fun AppNavigation() {
             Register(
                 viewModel = viewModel,
                 onRegisterSuccess = { user ->
-                    navController.navigate(
-                        Route.StudentMain.createRoute(
-                            userId = user.id,
-                            name = user.name ?: user.email,
-                            email = user.email
-                        )
-                    ) {
+                    navController.navigate(Route.Login.route) {
                         popUpTo(Route.Register.route) { inclusive = true }
                     }
                 },
@@ -100,7 +87,7 @@ fun AppNavigation() {
             )
         }
 
-        // MAIN (post-login)
+        // MAIN
         composable(
             route = Route.StudentMain.route,
             arguments = listOf(

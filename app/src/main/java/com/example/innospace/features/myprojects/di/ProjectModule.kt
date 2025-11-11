@@ -1,7 +1,10 @@
 package com.example.innospace.features.myprojects.di
 
+import com.example.innospace.features.myprojects.data.remote.services.CollaborationService
 import com.example.innospace.features.myprojects.data.remote.services.ProjectService
+import com.example.innospace.features.myprojects.data.repositories.CollaborationRepositoryImpl
 import com.example.innospace.features.myprojects.data.repositories.ProjectRepositoryImpl
+import com.example.innospace.features.myprojects.domain.repositories.CollaborationRepository
 import com.example.innospace.features.myprojects.domain.repositories.ProjectRepository
 import dagger.Module
 import dagger.Provides
@@ -25,4 +28,18 @@ object ProjectModule {
     fun provideProjectService(retrofit: Retrofit): ProjectService {
         return retrofit.create(ProjectService::class.java)
     }
+
+    // --- NUEVAS ADICIONES ---
+    @Provides
+    @Singleton
+    fun provideCollaborationRepository(service: CollaborationService): CollaborationRepository {
+        return CollaborationRepositoryImpl(service)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCollaborationService(retrofit: Retrofit): CollaborationService {
+        return retrofit.create(CollaborationService::class.java)
+    }
+    // --- FIN DE ADICIONES ---
 }
