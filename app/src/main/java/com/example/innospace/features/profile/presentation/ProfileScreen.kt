@@ -32,8 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import com.example.innospace.core.ui.theme.LightBackground
-import com.example.innospace.core.ui.theme.PurplePrimary
+
 import java.io.ByteArrayOutputStream
 
 @Composable
@@ -271,7 +270,54 @@ private fun ProfileContent(
 
                             }
 
-                        }}}
+                        }
+                    }
+                }
+            }
+            if (!profile.experiences.isNullOrEmpty()) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = "Experiencia",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.SemiBold)
+
+                        )
+
+                        Divider()
+
+                        profile.experiences.forEach { experience ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Surface(
+                                    modifier = Modifier.size(8.dp),
+                                    shape = MaterialTheme.shapes.small,
+                                    color = MaterialTheme.colorScheme.primary
+                                ) {}
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text(
+                                    text = experience,
+                                    style = MaterialTheme.typography.bodyLarge.copy(
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -295,7 +341,7 @@ private fun ProfileContent(
                         )
                     ) {
                         Text("Cerrar sesión")
-                    }
+                    }}}
                 }
     if (showEditDialog) {
         EditProfileDialog(
@@ -307,7 +353,7 @@ private fun ProfileContent(
             }
         )
     }
-}}}}
+}
 
 @Composable
 private fun ProfileInfoItem(

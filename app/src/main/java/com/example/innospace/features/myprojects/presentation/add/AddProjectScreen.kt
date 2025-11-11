@@ -2,11 +2,10 @@ package com.example.innospace.features.myprojects.presentation.add
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Send
+
 import androidx.compose.material.icons.automirrored.filled.ShortText
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
@@ -19,8 +18,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.innospace.core.ui.theme.PurplePrimary
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddProjectScreen(
@@ -71,8 +71,9 @@ fun AddProjectScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(20.dp)
+                .padding(horizontal = 20.dp, vertical = 20.dp)
                 .fillMaxSize()
+                .imePadding()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
@@ -126,24 +127,13 @@ fun AddProjectScreen(
 
             Button(
                 onClick = { viewModel.createProject(studentId) },
-                enabled = !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    .zIndex(10f)
+                    .height(50.dp)
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        strokeWidth = 2.dp,
-                        modifier = Modifier.size(22.dp)
-                    )
-                } else {
-                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
-                    Spacer(Modifier.width(6.dp))
-                    Text("Publicar")
-                }
+                Text("Publicar", color = Color.White)
+
             }
         }
     }
