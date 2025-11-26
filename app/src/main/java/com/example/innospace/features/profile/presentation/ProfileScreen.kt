@@ -14,6 +14,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -23,6 +24,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -32,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-
 import java.io.ByteArrayOutputStream
 
 @Composable
@@ -41,52 +42,65 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
-    when (val state = uiState) {
-        is ProfileUiState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-            }
-        }
-
-        is ProfileUiState.Success -> {
-            ProfileContent(
-                profile = state.profile,
-                viewModel = viewModel,
-                onLogout = {
-                    viewModel.logout()
-                    onLogout()
-                }
-            )
-        }
-
-        is ProfileUiState.Error -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Text(
-                        text = state.message,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyLarge
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    listOf(
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.9f),
+                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f)
                     )
-                    Button(
-                        onClick = onLogout,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        )
+                )
+            )
+    ) {
+        when (val state = uiState) {
+            is ProfileUiState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color.White)
+                }
+            }
+
+            is ProfileUiState.Success -> {
+                ProfileContent(
+                    profile = state.profile,
+                    viewModel = viewModel,
+                    onLogout = {
+                        viewModel.logout()
+                        onLogout()
+                    }
+                )
+            }
+
+            is ProfileUiState.Error -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Card(
+                        modifier = Modifier.padding(24.dp),
+                        shape = RoundedCornerShape(28.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
                     ) {
-                        Text("Volver al Login", color = MaterialTheme.colorScheme.onPrimary)
+                        Column(
+                            modifier = Modifier.padding(24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Text(
+                                text = state.message,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                            Button(
+                                onClick = onLogout,
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                            ) {
+                                Text("Volver al Login", color = Color.White)
+                            }
+                        }
                     }
                 }
             }
@@ -117,40 +131,43 @@ private fun ProfileContent(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
                         text = "Mi Perfil",
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onPrimary
+                        color = Color.White
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent
+                ),
+                actions = {
+                    IconButton(onClick = onLogout) {
+                        Icon(Icons.Default.ExitToApp, contentDescription = "Cerrar sesión", tint = Color.White)
+                    }
+                }
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = Color.Transparent
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
                 .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
-
             Spacer(modifier = Modifier.height(8.dp))
             Surface(
-                modifier = Modifier.size(120.dp),
-                shape = MaterialTheme.shapes.extraLarge,
-                color = MaterialTheme.colorScheme.primaryContainer
+                modifier = Modifier
+                    .size(130.dp)
+                    .border(4.dp, Color.White.copy(alpha = 0.3f), CircleShape),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.surfaceVariant
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     if (!profile.photoUrl.isNullOrEmpty()) {
@@ -167,7 +184,7 @@ private fun ProfileContent(
                                 imageVector = Icons.Default.Person,
                                 contentDescription = "Profile",
                                 modifier = Modifier.size(70.dp),
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     } else {
@@ -175,7 +192,7 @@ private fun ProfileContent(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Profile",
                             modifier = Modifier.size(70.dp),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -183,166 +200,115 @@ private fun ProfileContent(
 
             Text(
                 text = profile.name,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    color = Color.White,
                     fontWeight = FontWeight.Bold
                 )
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            if (!profile.description.isNullOrEmpty()) {
+                Text(
+                    text = profile.description,
+                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.White.copy(alpha = 0.9f)),
+                    maxLines = 2
+                )
+            }
 
+            Spacer(modifier = Modifier.height(8.dp))
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                shape = RoundedCornerShape(28.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    Text(
-                        text = "Información Personal",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    )
 
-                    Divider(color = MaterialTheme.colorScheme.outlineVariant)
+                    SectionTitle("Información Personal", Icons.Default.Person)
 
-                    ProfileInfoItem(label = "Nombre Completo", value = profile.name)
+                    ProfileInfoItem(label = "Teléfono", value = profile.phoneNumber, icon = Icons.Default.Phone)
+                    ProfileInfoItem(label = "Portafolio", value = profile.portfolioUrl, icon = Icons.Default.Link)
 
-                    if (!profile.phoneNumber.isNullOrEmpty()) {
-                        ProfileInfoItem(label = "Teléfono", value = profile.phoneNumber)
-                    }
+                    Divider(color = MaterialTheme.colorScheme.surfaceVariant)
 
-                    if (!profile.description.isNullOrEmpty()) {
-                        ProfileInfoItem(label = "Descripción", value = profile.description)
-                    }
+                    SectionTitle("Habilidades", Icons.Default.Star)
 
-                    if (!profile.portfolioUrl.isNullOrEmpty()) {
-                        ProfileInfoItem(label = "Portafolio", value = profile.portfolioUrl)
-                    }
-                }
-            }
-
-            if (!profile.skills.isNullOrEmpty()) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Text(
-                            text = "Habilidades",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        )
-
-                        Divider(color = MaterialTheme.colorScheme.outlineVariant)
-
-                        profile.skills.forEach { skill ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                    if (!profile.skills.isNullOrEmpty()) {
+                        @OptIn(ExperimentalLayoutApi::class)
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            profile.skills.forEach { skill ->
                                 Surface(
-                                    modifier = Modifier.size(8.dp),
-                                    shape = MaterialTheme.shapes.small,
-                                    color = MaterialTheme.colorScheme.primary
-                                ) {}
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Text(
-                                    text = skill,
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        color = MaterialTheme.colorScheme.onSurface
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = MaterialTheme.colorScheme.primaryContainer
+                                ) {
+                                    Text(
+                                        text = skill,
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
-                                )
-
+                                }
                             }
-
                         }
+                    } else {
+                        Text("Sin habilidades registradas", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
                     }
-                }
-            }
-            if (!profile.experiences.isNullOrEmpty()) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Text(
-                            text = "Experiencia",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontWeight = FontWeight.SemiBold)
 
-                        )
+                    Divider(color = MaterialTheme.colorScheme.surfaceVariant)
 
-                        Divider()
+                    SectionTitle("Experiencia", Icons.Default.Work)
 
+                    if (!profile.experiences.isNullOrEmpty()) {
                         profile.experiences.forEach { experience ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Surface(
-                                    modifier = Modifier.size(8.dp),
-                                    shape = MaterialTheme.shapes.small,
-                                    color = MaterialTheme.colorScheme.primary
-                                ) {}
-                                Spacer(modifier = Modifier.width(12.dp))
+                            Row(verticalAlignment = Alignment.Top) {
+                                Icon(Icons.Default.ArrowRight, null, tint = MaterialTheme.colorScheme.primary)
                                 Text(
                                     text = experience,
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
+                                    style = MaterialTheme.typography.bodyMedium
                                 )
                             }
+                        }
+                    } else {
+                        Text("Sin experiencia registrada", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = { showEditDialog = true },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        contentPadding = PaddingValues()
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
+                                    )
+                                )
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("Editar Perfil", color = Color.White, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Button(
-                        onClick = { showEditDialog = true },
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                    ) {
-                        Text("Editar perfil")
-                    }
-
-                    OutlinedButton(
-                        onClick = onLogout,
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Color.White,
-                            containerColor = MaterialTheme.colorScheme.error
-                        )
-                    ) {
-                        Text("Cerrar sesión")
-                    }}}
-                }
     if (showEditDialog) {
         EditProfileDialog(
             profile = profile,
@@ -356,30 +322,50 @@ private fun ProfileContent(
 }
 
 @Composable
-private fun ProfileInfoItem(
-    label: String,
-    value: String
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
+fun SectionTitle(text: String, icon: androidx.compose.ui.graphics.vector.ImageVector) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(icon, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyLarge.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Medium
+            text = text,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
             )
         )
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
+@Composable
+private fun ProfileInfoItem(
+    label: String,
+    value: String?,
+    icon: androidx.compose.ui.graphics.vector.ImageVector? = null
+) {
+    if (!value.isNullOrEmpty()) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (icon != null) {
+                Icon(icon, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(20.dp))
+                Spacer(modifier = Modifier.width(12.dp))
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
+                )
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun EditProfileDialog(
     profile: com.example.innospace.features.profile.domain.models.StudentProfile,
@@ -396,7 +382,6 @@ private fun EditProfileDialog(
 
     val skills = remember { (profile.skills?.toMutableList() ?: mutableListOf()).toMutableStateList() }
     var newSkill by remember { mutableStateOf("") }
-
     val experiences = remember { (profile.experiences?.toMutableList() ?: mutableListOf()).toMutableStateList() }
     var newExperience by remember { mutableStateOf("") }
 
@@ -404,63 +389,36 @@ private fun EditProfileDialog(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         selectedImageUri = uri
-        uri?.let {
-            photoBase64 = convertUriToBase64(context, it)
-        }
+        uri?.let { photoBase64 = convertUriToBase64(context, it) }
     }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier
-                .fillMaxWidth(0.99f)
-                .fillMaxHeight(0.92f),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
+                .fillMaxWidth()
+                .fillMaxHeight(0.9f),
+            shape = RoundedCornerShape(28.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp, 20.dp, 24.dp, 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Editar Perfil",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    IconButton(onClick = onDismiss) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Cerrar"
-                        )
-                    }
-                }
-
-                Divider()
+            Column(modifier = Modifier.padding(24.dp)) {
+                Text(
+                    text = "Editar Perfil",
+                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .verticalScroll(rememberScrollState())
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                         Box(
                             modifier = Modifier
-                                .size(120.dp)
+                                .size(100.dp)
                                 .clip(CircleShape)
                                 .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
                                 .clickable { imagePickerLauncher.launch("image/*") },
@@ -469,323 +427,73 @@ private fun EditProfileDialog(
                             if (selectedImageUri != null) {
                                 Image(
                                     painter = rememberAsyncImagePainter(selectedImageUri),
-                                    contentDescription = "Foto de perfil",
+                                    contentDescription = null,
                                     modifier = Modifier.fillMaxSize(),
                                     contentScale = ContentScale.Crop
                                 )
                             } else if (!profile.photoUrl.isNullOrEmpty()) {
                                 val bitmap = remember(profile.photoUrl) { base64ToBitmap(profile.photoUrl) }
-                                if (bitmap != null) {
+                                if(bitmap != null) {
                                     Image(
                                         bitmap = bitmap.asImageBitmap(),
-                                        contentDescription = "Foto de perfil",
+                                        contentDescription = null,
                                         modifier = Modifier.fillMaxSize(),
                                         contentScale = ContentScale.Crop
                                     )
-                                } else {
-                                    Icon(
-                                        imageVector = Icons.Default.AddAPhoto,
-                                        contentDescription = "Agregar foto",
-                                        modifier = Modifier.size(40.dp),
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
                                 }
                             } else {
-                                Icon(
-                                    imageVector = Icons.Default.AddAPhoto,
-                                    contentDescription = "Agregar foto",
-                                    modifier = Modifier.size(40.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
+                                Icon(Icons.Default.AddAPhoto, null, tint = MaterialTheme.colorScheme.primary)
                             }
                         }
                     }
+                    Text("Toca para cambiar", style = MaterialTheme.typography.bodySmall, color = Color.Gray, modifier = Modifier.align(Alignment.CenterHorizontally))
 
-                    Text(
-                        text = "Toca para cambiar la foto",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                    StyledTextField(name, { name = it }, "Nombre", Icons.Default.Person)
+                    StyledTextField(phoneNumber, { phoneNumber = it }, "Teléfono", Icons.Default.Phone)
+                    StyledTextField(description, { description = it }, "Descripción", Icons.Default.Info, maxLines = 4)
+                    StyledTextField(portfolioUrl, { portfolioUrl = it }, "Portafolio", Icons.Default.Link)
 
-                    Text(
-                        text = "Información Básica",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    Divider()
 
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        label = { Text("Nombre Completo") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Person, contentDescription = null)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            focusedLabelColor = MaterialTheme.colorScheme.primary
-                        )
-                    )
-
-                    OutlinedTextField(
-                        value = phoneNumber,
-                        onValueChange = { phoneNumber = it },
-                        label = { Text("Teléfono") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Phone, contentDescription = null)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            focusedLabelColor = MaterialTheme.colorScheme.primary
-                        )
-                    )
-
-                    OutlinedTextField(
-                        value = description,
-                        onValueChange = { description = it },
-                        label = { Text("Descripción") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Info, contentDescription = null)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        minLines = 3,
-                        maxLines = 5,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            focusedLabelColor = MaterialTheme.colorScheme.primary
-                        )
-                    )
-
-                    OutlinedTextField(
-                        value = portfolioUrl,
-                        onValueChange = { portfolioUrl = it },
-                        label = { Text("URL del Portafolio") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Link, contentDescription = null)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            focusedLabelColor = MaterialTheme.colorScheme.primary
-                        )
-                    )
-
-                    Text(
-                        text = "Habilidades",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedTextField(
-                            value = newSkill,
-                            onValueChange = { newSkill = it },
-                            label = { Text("Nueva habilidad") },
-                            modifier = Modifier.weight(1f),
-                            singleLine = true,
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                                focusedLabelColor = MaterialTheme.colorScheme.primary
-                            )
-                        )
-                        IconButton(
-                            onClick = {
-                                if (newSkill.isNotBlank()) {
-                                    skills.add(newSkill.trim())
-                                    newSkill = ""
-                                }
-                            },
-                            modifier = Modifier.size(48.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Agregar habilidad",
-                                tint = MaterialTheme.colorScheme.primary
-                            )
+                    Text("Habilidades", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        StyledTextField(newSkill, { newSkill = it }, "Nueva habilidad", Icons.Default.Star, modifier = Modifier.weight(1f))
+                        IconButton(onClick = { if(newSkill.isNotBlank()){ skills.add(newSkill); newSkill="" } }) {
+                            Icon(Icons.Default.AddCircle, null, tint = MaterialTheme.colorScheme.primary)
+                        }
+                    }
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        skills.forEachIndexed { idx, s ->
+                            InputChip(selected = false, onClick = { skills.removeAt(idx) }, label = { Text(s) }, trailingIcon = { Icon(Icons.Default.Close, null, Modifier.size(16.dp)) })
                         }
                     }
 
-                    if (skills.isNotEmpty()) {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                            )
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(12.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                skills.forEachIndexed { index, skill ->
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Row(
-                                            modifier = Modifier.weight(1f),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Surface(
-                                                modifier = Modifier.size(8.dp),
-                                                shape = CircleShape,
-                                                color = MaterialTheme.colorScheme.primary
-                                            ) {}
-                                            Spacer(modifier = Modifier.width(12.dp))
-                                            Text(
-                                                text = skill,
-                                                style = MaterialTheme.typography.bodyLarge
-                                            )
-                                        }
-                                        IconButton(
-                                            onClick = { skills.removeAt(index) },
-                                            modifier = Modifier.size(32.dp)
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Delete,
-                                                contentDescription = "Eliminar",
-                                                tint = MaterialTheme.colorScheme.error,
-                                                modifier = Modifier.size(20.dp)
-                                            )
-                                        }
-                                    }
-                                }
-                            }
+                    Text("Experiencia", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        StyledTextField(newExperience, { newExperience = it }, "Nueva experiencia", Icons.Default.Work, modifier = Modifier.weight(1f))
+                        IconButton(onClick = { if(newExperience.isNotBlank()){ experiences.add(newExperience); newExperience="" } }) {
+                            Icon(Icons.Default.AddCircle, null, tint = MaterialTheme.colorScheme.primary)
                         }
                     }
-
-                    Text(
-                        text = "Experiencias",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedTextField(
-                            value = newExperience,
-                            onValueChange = { newExperience = it },
-                            label = { Text("Nueva experiencia") },
-                            modifier = Modifier.weight(1f),
-                            singleLine = true,
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                                focusedLabelColor = MaterialTheme.colorScheme.primary
-                            )
-                        )
-                        IconButton(
-                            onClick = {
-                                if (newExperience.isNotBlank()) {
-                                    experiences.add(newExperience.trim())
-                                    newExperience = ""
-                                }
-                            },
-                            modifier = Modifier.size(48.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Agregar experiencia",
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-
-                    if (experiences.isNotEmpty()) {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                            )
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(12.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                experiences.forEachIndexed { index, experience ->
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Row(
-                                            modifier = Modifier.weight(1f),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Surface(
-                                                modifier = Modifier.size(8.dp),
-                                                shape = CircleShape,
-                                                color = MaterialTheme.colorScheme.secondary
-                                            ) {}
-                                            Spacer(modifier = Modifier.width(12.dp))
-                                            Text(
-                                                text = experience,
-                                                style = MaterialTheme.typography.bodyLarge
-                                            )
-                                        }
-                                        IconButton(
-                                            onClick = { experiences.removeAt(index) },
-                                            modifier = Modifier.size(32.dp)
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Delete,
-                                                contentDescription = "Eliminar",
-                                                tint = MaterialTheme.colorScheme.error,
-                                                modifier = Modifier.size(20.dp)
-                                            )
-                                        }
-                                    }
-                                }
-                            }
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        experiences.forEachIndexed { idx, s ->
+                            InputChip(selected = false, onClick = { experiences.removeAt(idx) }, label = { Text(s) }, trailingIcon = { Icon(Icons.Default.Close, null, Modifier.size(16.dp)) })
                         }
                     }
                 }
 
-                Divider()
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp, 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedButton(
                         onClick = onDismiss,
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.onSurface
-                        )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Cancelar")
-                    }
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Gray)
+                    ) { Text("Cancelar") }
 
                     Button(
                         onClick = {
-                            val updateProfileDto = com.example.innospace.features.profile.data.remote.models.UpdateProfileDto(
+                            val dto = com.example.innospace.features.profile.data.remote.models.UpdateProfileDto(
                                 name = name,
                                 photoUrl = photoBase64 ?: profile.photoUrl,
                                 description = description.ifEmpty { null },
@@ -794,26 +502,41 @@ private fun EditProfileDialog(
                                 skills = skills.toList(),
                                 experiences = experiences.toList()
                             )
-
-                            onSave(updateProfileDto)
+                            onSave(dto)
                         },
                         modifier = Modifier.weight(1f),
-                        enabled = name.isNotBlank()
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Guardar")
-                    }
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    ) { Text("Guardar") }
                 }
             }
         }
     }
 }
-
+@Composable
+fun StyledTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    modifier: Modifier = Modifier,
+    maxLines: Int = 1
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        leadingIcon = { Icon(icon, contentDescription = null) },
+        shape = RoundedCornerShape(12.dp),
+        modifier = modifier.fillMaxWidth(),
+        maxLines = maxLines,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f),
+            cursorColor = MaterialTheme.colorScheme.primary
+        )
+    )
+}
 private fun convertUriToBase64(context: Context, uri: Uri): String? {
     return try {
         val inputStream = context.contentResolver.openInputStream(uri)
@@ -825,23 +548,13 @@ private fun convertUriToBase64(context: Context, uri: Uri): String? {
         val byteArray = byteArrayOutputStream.toByteArray()
 
         Base64.encodeToString(byteArray, Base64.NO_WRAP)
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
+    } catch (e: Exception) { e.printStackTrace(); null }
 }
 
 private fun base64ToBitmap(base64String: String): android.graphics.Bitmap? {
     return try {
-        val cleanBase64 = base64String.replace("data:image/jpeg;base64,", "")
-            .replace("data:image/png;base64,", "")
-            .trim()
-
+        val cleanBase64 = base64String.replace("data:image/jpeg;base64,", "").replace("data:image/png;base64,", "").trim()
         val decodedBytes = Base64.decode(cleanBase64, Base64.DEFAULT)
         BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
+    } catch (e: Exception) { e.printStackTrace(); null }
 }
-
