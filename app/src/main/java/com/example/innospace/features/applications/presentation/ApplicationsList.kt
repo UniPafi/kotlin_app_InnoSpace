@@ -1,129 +1,138 @@
 package com.example.innospace.features.applications.presentation
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.innospace.core.ui.theme.BlueAccent
-import com.example.innospace.core.ui.theme.LightBackground
-import com.example.innospace.core.ui.theme.PurplePrimary
-import com.example.innospace.core.ui.theme.SurfaceLight
-import com.example.innospace.core.ui.theme.TextPrimary
-import com.example.innospace.core.ui.theme.TextSecondary
 import com.example.innospace.features.applications.data.remote.dto.OpportunityCardDto
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApplicationsList(applications: List<OpportunityCardDto>) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(applications) { card ->
-            var expanded by remember { mutableStateOf(false) }
+            ApplicationCardItem(card)
+        }
+    }
+}
 
-            Card(
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ApplicationCardItem(card: OpportunityCardDto) {
+    var expanded by remember { mutableStateOf(false) }
+
+    val status = card.managerResponse?.uppercase() ?: "PENDING"
+    val statusIndicatorColor = when (status) {
+        "ACCEPTED" -> Color(0xFF4CAF50)
+        "REJECTED" -> MaterialTheme.colorScheme.error
+        else -> Color(0xFFFF9800)
+    }
+
+    val statusText = when (status) {
+        "ACCEPTED" -> "Aceptada"
+        "REJECTED" -> "Rechazada"
+        else -> "Pendiente"
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize(),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(1.dp, Color(0xFFE0E0E0)),
+        onClick = { expanded = !expanded }
+    ) {
+        Row(modifier = Modifier.height(IntrinsicSize.Min)) {
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-                    .animateContentSize(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                onClick = { expanded = !expanded }
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
+                    .width(6.dp)
+                    .fillMaxHeight()
+                    .background(statusIndicatorColor)
+            )
+
+            Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = card.opportunityTitle,
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        ),
+                        modifier = Modifier.weight(1f)
                     )
 
-                    Spacer(Modifier.height(4.dp))
-
-                    Text(
-                        text = if (expanded)
-                            card.opportunityDescription ?: "Sin descripción"
-                        else
-                            (card.opportunityDescription?.take(100) ?: "Sin descripción") + if ((card.opportunityDescription?.length ?: 0) > 100) "..." else "",
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
+                    Surface(
+                        color = statusIndicatorColor.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier.padding(start = 8.dp)
                     ) {
                         Text(
-                            text = "Estado: ${card.managerResponse ?: "Pendiente"}",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                fontWeight = FontWeight.SemiBold
+                            text = statusText,
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = statusIndicatorColor,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(8.dp))
+
+                Text(
+                    text = if (expanded) card.opportunityDescription ?: "Sin descripción."
+                    else (card.opportunityDescription?.take(80) ?: "Sin descripción") + "...",
+                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.DarkGray),
+                    maxLines = if (expanded) Int.MAX_VALUE else 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = if (expanded) "Ver menos" else "Ver detalles",
+                            style = MaterialTheme.typography.labelLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
                             )
                         )
-
-                        TextButton(
-                            onClick = { expanded = !expanded },
-                            colors = ButtonDefaults.textButtonColors(
-                                contentColor = if (expanded)
-                                    MaterialTheme.colorScheme.secondary
-                                else
-                                    MaterialTheme.colorScheme.primary
-                            )
-                        ) {
-                            Text(
-                                if (expanded) "Ver menos" else "Ver más",
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    color = if (expanded)
-                                    MaterialTheme.colorScheme.secondary
-                                else
-                                    MaterialTheme.colorScheme.primary
-                                )
-                            )
-                        }
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(
+                            imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
                     }
                 }
             }
         }
     }
 }
-
