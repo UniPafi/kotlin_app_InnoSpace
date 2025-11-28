@@ -1,6 +1,5 @@
 package com.example.innospace.core.root
 
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Assignment
@@ -11,13 +10,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -34,7 +34,6 @@ import com.example.innospace.features.myprojects.presentation.collaborators.Proj
 import com.example.innospace.features.myprojects.presentation.detail.ProjectDetailScreen
 import com.example.innospace.features.myprojects.presentation.edit.EditProjectScreen
 import com.example.innospace.features.myprojects.presentation.list.MyProjectsScreen
-
 
 data class NavigationItem(
     val icon: ImageVector,
@@ -56,8 +55,10 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
 
     Scaffold(
         bottomBar = {
-            NavigationBar ( containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface  ){
+            NavigationBar(
+                containerColor = Color.White,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ) {
                 navigationItems.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = index == selectedIndex.intValue,
@@ -72,15 +73,25 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
                             }
                         },
                         icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = {  Text(
-                            item.label,
-                            style = MaterialTheme.typography.labelSmall
-                        ) }
+                        label = {
+                            Text(
+                                item.label,
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = Color(0xFFE8DEF8),
+                            selectedIconColor = Color(0xFF1D192B),
+                            selectedTextColor = Color(0xFF1D192B),
+
+                            unselectedIconColor = Color.Gray,
+                            unselectedTextColor = Color.Gray
+                        )
                     )
                 }
             }
         }
-    ) {  paddingValues ->
+    ) { paddingValues ->
         NavHost(
             navController = navController,
             startDestination = Route.Explore.route,
@@ -98,7 +109,6 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
             composable(
                 route = "opportunityDetail/{id}/{studentId}",
                 arguments = listOf(
-
                     navArgument("id") { type = NavType.LongType },
                     navArgument("studentId") { type = NavType.LongType }
                 )
@@ -109,7 +119,7 @@ fun Main(userId: Long, name: String, email: String, onLogout: () -> Unit) {
                     navController = navController,
                     opportunityId = id,
                     viewModel = hiltViewModel(),
-                    onBack = {navController.popBackStack()},
+                    onBack = { navController.popBackStack() },
                     studentId = studentId
                 )
             }
